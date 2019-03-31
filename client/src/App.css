@@ -1,0 +1,42 @@
+/*
+  Global variables can be accessed through the command: var(VARIABLE_KEY);
+*/
+:root {
+  --primary: #C0E0DE;
+  --primary-dark: #91A8A8;
+  --secondary: #E6CAD5;
+  --text: #3C474B;
+}
+
+.App {
+  text-align: center;
+  font-family: "Courier New", monospace;
+  width: 100%;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 42px;
+}
+
+.passwords {
+  list-style: none;
+  color: var(--text);
+  padding: 0;
+  font-size: 32px;
+  margin-bottom: 2em;
+}
+
+.more {
+  font-size: 32px;
+  font-family: "Courier New", monospace;
+  border: 2px solid #000;
+  background-color: #fff;
+  padding: 10px 25px;
+}
+.more:hover {
+  background-color: var(--secondary);
+}
+.more:active {
+  background-color: var(--secondary);
+}
