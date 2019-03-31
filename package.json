@@ -1,0 +1,21 @@
+{
+  "name": "tddd27_project_raw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.liu.se:danho525/tddd27_project_raw.git"
+  },
+  "keywords": [],
+  "author": "Daniel Holmberg",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "password-generator": "^2.2.0"
+  }
+}
