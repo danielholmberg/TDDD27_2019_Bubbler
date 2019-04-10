@@ -1,0 +1,47 @@
+.ProfileAvatar {
+  display: block;
+  margin: 16px;
+}
+
+.Dropzone {
+  width: 184px;
+  height: auto;
+  background: var(--background-page);
+  padding: 8px;
+  border: 2px solid #eaeaea;
+  text-align: center;
+  color: var(--text-invers);
+}
+
+.ThumbsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.Thumb {
+  display: inline-flex;
+  border-radius: 2px;
+  border: 2px solid #eaeaea;
+  background: var(--background-img);
+  margin-bottom: 8px;
+  margin-right: 8px;
+  width: 80px;
+  height: 80px;
+  padding: 4;
+  box-sizing: border-box;
+  place-content: center;
+}
+
+.ThumbInner {
+  display: flex;
+  min-width: 0px;
+  overflow: hidden;
+}
+
+.Img {
+  display: block;
+  width: auto;
+  height: 100%;
+}
