@@ -1,0 +1,8 @@
+{
+  "body": "{\"content\":\"Testing\",\"attachment\":\"testWine.jpg\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-TEST-1234"
+    }
+  }
+}

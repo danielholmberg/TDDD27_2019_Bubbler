@@ -1,0 +1,34 @@
+{
+  "name": "bubbler",
+  "version": "1.0.0",
+  "description": "A web application which provides a social platform for sparkling wine consumption",
+  "main": "handler.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Daniel Holmberg",
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.liu.se:danho525/tddd27_project_bubbler.git"
+  },
+  "devDependencies": {
+    "ajv": "^6.10.0",
+    "aws-sdk": "^2.437.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-source-map-support": "^1.0.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "jest": "^21.2.1",
+    "serverless-offline": "^3.25.6",
+    "serverless-webpack": "^5.1.0",
+    "webpack": "^4.16.2",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "source-map-support": "^0.4.18",
+    "uuid": "^3.3.2"
+  }
+}
