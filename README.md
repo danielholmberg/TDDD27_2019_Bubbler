@@ -15,18 +15,18 @@ A social platform to share your opinion on sparkling wines. The concept is simil
    - Choose *your current location*, *location of purchase*, *type of glas used when consumed* and *possible friends with whom you consume the beverage* for all your check-ins. 
 
 ## Technological specification
-### Front-end framework
-**React + Redux** (Javascript)
+### Front-end
+Framework: **React + Redux** (Javascript)
 
 
-### Back-end framework
-**Express** (Node.js)
-
-### Database
-**DynamoDB** (NoSQL)
-
-### CI and CD
-**Heroku** and **GitLab CI**
+### Back-end
+Framework: **Express** (Node.js)
+Server service: **AWS** (Serverless)
+   - Cognito User Pool (User-functionality)
+   - Cognito Identity Pool (User-persmissions)
+   - S3 Bucket (File-storage)
+   - IAM (Identity and Access Management)
+   - **DynamoDB** (NoSQL)
 
 
 ## Development - Adding to the project
