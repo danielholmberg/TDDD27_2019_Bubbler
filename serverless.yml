@@ -1,4 +1,4 @@
-service: notes-app-api
+service: bubbler-api
 
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
@@ -34,7 +34,7 @@ provider:
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
-  # - path: url path is /notes
+  # - path: url path is /wines
   # - method: POST request
   # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
   #     domain api call
