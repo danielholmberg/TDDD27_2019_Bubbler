@@ -54,7 +54,7 @@ export default class NewWine extends Component {
         ? await s3Upload(this.file)
         : null;
   
-      await this.createNote({
+      await this.createWine({
         attachment,
         content: this.state.content
       });
