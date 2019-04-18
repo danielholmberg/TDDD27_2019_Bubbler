@@ -1,0 +1,8 @@
+.Wines form {
+  padding-bottom: 15px;
+}
+
+.Wines form textarea {
+  height: 300px;
+  font-size: 24px;
+}
