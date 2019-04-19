@@ -3,7 +3,7 @@
 ## Development
 
 ### Initial process 
-1. `git clone git@gitlab.liu.se:danho525/tddd27_project_bubbler.git`
+1. `git clone <SSH or HTTPS link>`
 2. `cd tddd27_project_bubbler`
 3. `npm install` 
 
