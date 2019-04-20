@@ -58,9 +58,9 @@ And the LinkContainer component directs our app to each of the items.
               key="new"
               to="/wines/new"
             >
-              <ListGroupItem>
+              <ListGroupItem className="btn-add">
                 <h4>
-                  <b>{"\uFF0B"}</b> Add a new wine
+                  <b>{"\uFF0B"}</b> Add more bubbles
                 </h4>
               </ListGroupItem>
             </LinkContainer>
@@ -70,7 +70,7 @@ And the LinkContainer component directs our app to each of the items.
   renderLander() {
     return (
       <div className="lander">
-        <h1 style={{fontFamily: 'Bungee Inline'}}>BUBBLER</h1>
+        <h1>BUBBLER</h1>
         <p>It's all in the <b>bubbles</b></p>
       </div>
     );
@@ -79,7 +79,7 @@ And the LinkContainer component directs our app to each of the items.
   renderWines() {
     return (
       <div className="wines">
-        <PageHeader>Your Wines</PageHeader>
+        <PageHeader>Your Bubbles</PageHeader>
         <ListGroup>
           {!this.state.isLoading && this.renderWinesList(this.state.wines)}
         </ListGroup>

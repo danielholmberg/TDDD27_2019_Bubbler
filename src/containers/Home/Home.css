@@ -4,8 +4,8 @@
 }
 
 .Home .lander h1 {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 600;
+  font-family: "Bungee Inline";
+  font-weight: bold;
 }
 
 .Home .lander p {
@@ -14,7 +14,7 @@
 
 .Home .wines h4 {
   font-family: "Open Sans", sans-serif;
-  font-weight: 600;
+  font-weight: bold;
   overflow: hidden;
   line-height: 1.5;
   white-space: nowrap;
@@ -22,4 +22,8 @@
 }
 .Home .wines p {
   color: #666;
+}
+
+.Home .btn-add {
+  background: #c9f8bd;
 }

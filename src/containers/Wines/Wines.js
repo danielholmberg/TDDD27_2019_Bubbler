@@ -123,7 +123,7 @@ export default class Wines extends Component {
     event.preventDefault();
   
     const confirmed = window.confirm(
-      "Are you sure you want to delete this wine?"
+      "Are you sure you want to delete these bubbles?"
     );
   
     if (!confirmed) {
