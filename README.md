@@ -23,6 +23,9 @@
 8. `git commit -m "<explanatory message>"` - commit changes with an explanatory message.
 9. `git push`
 
-
-
+### Deploy changes to AWS S3 Bucket
+10. `npm run build` - This packages all of our assets and places them in the **build/** directory.
+11. `npm run deploy` - Added this command to the **package.json** which performs the following command: 
+    -  `aws s3 sync build/ s3://bubbler-frontend --delete` - This syncs the **build/** directory with our bucket on S3. Note the `--delete` flag here; this is telling S3 to delete all the files that are in the bucket that we aren’t uploading this time around, without this flag we’ll end up retaining all the files from the previous builds.
+12. And our app should be live on S3! To see it live, head over to [http://bubbler-frontend.s3-website.us-east-2.amazonaws.com/](http://bubbler-frontend.s3-website.us-east-2.amazonaws.com/)
 
