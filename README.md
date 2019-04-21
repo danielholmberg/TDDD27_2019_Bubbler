@@ -5,13 +5,14 @@
 ### Initial process 
 1. `git clone <SSH or HTTPS link>`
 2. `cd tddd27_project_bubbler`
-3. `npm install` 
+3. `git checkout --track origin/frontend` - this creates a local branch named `frontend` and sets it to track the remote `origin/frontend` branch.
+4. `npm install` - install all necessary dependencies.
 
 
 ### Continuous process
 
 1. `cd tddd27_project_bubbler`
-2. `git checkout frontend` - checkout the branch assigned to the React.js frontend.
+2. `git checkout frontend` - make sure you are on the `frontend` branch.
 3. `git pull` - get remote changes.
 4. `npm start` - Runs the app in development mode.
    - Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
