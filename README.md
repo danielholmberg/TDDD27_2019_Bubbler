@@ -20,7 +20,8 @@ Framework: **React + Redux** (Javascript)
 
 
 ### Back-end
-Framework: **Node.js**
+Framework: **Node.js** (Javascript)
+
 Server service: **AWS** (Serverless)
    - Cognito User Pool (User-functionality)
    - Cognito Identity Pool (User-persmissions)
