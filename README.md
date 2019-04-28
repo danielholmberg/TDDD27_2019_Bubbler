@@ -19,7 +19,7 @@
    - The page will reload if you make edits.<br>
    - Press **F12** in the browser to open **console**. 
 5. `code .` - opens the project in VS Code.
-6. **Make some changes**
+6. **Make some changes** - and make sure it works **before** continuing to push the changes.
 7. `git add <file>` - add files to commit.
 8. `git commit -m "<explanatory message>"` - commit changes with an explanatory message.
 9. `git push`
