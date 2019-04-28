@@ -16,7 +16,9 @@ import * as serviceWorker from './serviceWorker';
  *    Amplify allows you to add multiple APIs that your app is going to work with. 
  *    In our case our entire backend is just one single API.
 
-The Amplify.configure() is just setting the various AWS resources that we want to interact with. It isn’t doing anything else special here beside configuration. So while this might look intimidating, just remember this is only setting things up.
+The Amplify.configure() is just setting the various AWS resources that we want to interact with. 
+It isn’t doing anything else special here beside configuration. So while this might look intimidating, 
+just remember this is only setting things up.
  */
 Amplify.configure({
   Auth: {
@@ -38,6 +40,11 @@ Amplify.configure({
         endpoint: config.apiGateway.URL,
         region: config.apiGateway.REGION
       },
+      {
+        name: "systembolaget",
+        endpoint: config.apiGateway.URL,
+        region: config.apiGateway.REGION
+      }
     ]
   }
 });

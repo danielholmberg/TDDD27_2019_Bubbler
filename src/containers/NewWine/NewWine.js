@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { API } from "aws-amplify";
+import { Typeahead } from "react-bootstrap-typeahead";
 
 import LoaderButton from "../../components/LoaderButton/LoaderButton.js";
 import config from "../../config.js";
@@ -15,8 +16,26 @@ export default class NewWine extends Component {
 
     this.state = {
       isLoading: null,
+      systembolagetData: [],
       content: ""
     };
+  }
+
+  async componentDidMount() {
+    if(!this.props.isAuthenticated) {
+      return;
+    } 
+
+    try {
+      const systembolagetData = await this.getSystembolagetData();
+      this.setState({ systembolagetData });
+    } catch(e) {
+      alert(e);
+    }
+  }
+
+  getSystembolagetData() {
+    return API.get("systembolaget", "/systembolaget");
   }
 
   validateForm() {
@@ -24,8 +43,9 @@ export default class NewWine extends Component {
   }
 
   handleChange = event => {
+    const content = `${event[0].name} ${event[0].name2 === '' ? '' : '- ' + event[0].name2}`
     this.setState({
-      [event.target.id]: event.target.value
+      content: content
     });
   }
 
@@ -71,6 +91,22 @@ export default class NewWine extends Component {
     });
   }  
 
+  renderMenuItemChildren = (item, index) => {
+    return [
+      <div key="name">
+        <b>{item.name}</b> {item.name2 === '' ? '' : '- ' + item.name2}
+      </div>,
+      <div key="origin">
+        <small>
+          <b>Origin:</b> {item.origin === '' ? "Unkown" : item.origin}
+        </small>
+        <small>
+          <b> Country:</b> {item.countryOfOrigin === '' ? "Unkown" : item.countryOfOrigin}
+        </small>
+      </div>,
+    ];
+  }
+
   /**
    * The file input simply calls a different onChange handler (handleFileChange) that saves 
    * the file object as a class property. We use a class property instead of saving it in 
@@ -78,14 +114,19 @@ export default class NewWine extends Component {
    * component.
    */
   render() {
+    const props = {};
+    const options = this.state.systembolagetData;
+    props.renderMenuItemChildren = this.renderMenuItemChildren;
     return (
       <div className="NewWine">
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="content">
-            <FormControl
-              onChange={this.handleChange}
-              value={this.state.content}
-              componentClass="textarea"
+            <Typeahead
+            {...props}
+            labelKey={(option) => `${option.name} ${option.name2 === '' ? '' : '- ' + option.name2}`}
+            options={options}
+            onChange={this.handleChange}
+            placeholder="Choose your bubbles..."
             />
           </FormGroup>
           <FormGroup controlId="file">
