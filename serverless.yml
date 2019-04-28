@@ -91,6 +91,16 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+  # Defines an HTTP API endpoint that calls the main function in getSystembolagetData.js
+  # - path: url path is /systembolaget
+  # - method: GET request
+  getSystembolagetData:
+    handler: getSystembolagetData.main
+    events:
+      - http:
+          path: systembolaget
+          method: get
+          cors: true
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
