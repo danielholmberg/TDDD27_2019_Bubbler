@@ -1,19 +1,20 @@
 import React, { Component } from "react";
 import { API, Storage } from "aws-amplify";
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+
 import LoaderButton from "../../components/LoaderButton/LoaderButton.js";
 import config from "../../config.js";
-import "./Wines.css";
+import "./Wine.css";
 import { s3Upload } from "../../libs/awsLib.js";
 
 /**
  * Load the wine on componentDidMount and save it to the state. We get the id of our wine 
  * from the URL using the props automatically passed to us by React-Router in 
  * this.props.match.params.id. The keyword id is a part of the pattern matching in our 
- * route (/wines/:id). If there is an attachment, we use the key to get a secure link to 
- * the file we uploaded to S3. We then store this to the component’s state as attachmentURL.
- * The reason why we have the wine object in the state along with the content and the 
- * attachmentURL is because we use this when the user edits the wine.
+ * route (/wines/:id). If there is an image, we use the key to get a secure link to 
+ * the file we uploaded to S3. We then store this to the component’s state as imageURL.
+ * The reason why we have the wine object in the state along with the label and the 
+ * imageURL is because we use this when the user edits the wine.
  */
 export default class Wines extends Component {
   constructor(props) {
@@ -25,26 +26,26 @@ export default class Wines extends Component {
       isLoading: null,
       isDeleting: null,
       wine: null,
-      content: "",
-      attachmentURL: null
+      label: "",
+      imageURL: null
     };
     
   }
 
   async componentDidMount() {
     try {
-      let attachmentURL;
+      let imageURL;
       const wine = await this.getWine();
-      const { content, attachment } = wine;
+      const { label, image } = wine;
 
-      if (attachment) {
-        attachmentURL = await Storage.vault.get(attachment);
+      if (image) {
+        imageURL = await Storage.vault.get(image);
       }
 
       this.setState({
         wine,
-        content,
-        attachmentURL
+        label,
+        imageURL
       });
     } catch (e) {
       alert(e);
@@ -56,7 +57,7 @@ export default class Wines extends Component {
   }
 
   validateForm() {
-    return this.state.content.length > 0;
+    return this.state.label.length > 0;
   }
   
   formatFilename(str) {
@@ -85,33 +86,40 @@ export default class Wines extends Component {
    * id from this.props.match.params.id. We use the API.put() method from AWS Amplify.
    * And on success we redirect the user to the homepage.
    */
-  handleSubmit = async event => {
-    let attachment;
-  
+  handleSubmit = async event => {  
     event.preventDefault();
   
-    if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-      alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
+    if (this.file && this.file.size > config.MAX_IMAGE_SIZE) {
+      alert(`Please pick a file smaller than ${config.MAX_IMAGE_SIZE/1000000} MB.`);
       return;
     }
   
     this.setState({ isLoading: true });
   
     try {
-      if (this.file) {
-        attachment = await s3Upload(this.file);
-      }
+      const image = this.file 
+      ? await this.fileUpload(this.file)
+      : null;
   
-      // As of now, we are not deleting the old attachment when we upload a new one. Could be 
+      // As of now, we are not deleting the old image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
       await this.saveWine({
-        content: this.state.content,
-        attachment: attachment || this.state.wine.attachment
+        label: this.state.label,
+        image: image || this.state.wine.image
       });
       this.props.history.push("/");
     } catch (e) {
       alert(e);
       this.setState({ isLoading: false });
+    }
+  }
+
+  async fileUpload(file) {
+    try {
+      return await s3Upload(file);
+    } catch (e) {
+      alert(e);
+      throw(e);
     }
   }
   
@@ -133,7 +141,7 @@ export default class Wines extends Component {
     this.setState({ isDeleting: true });
   
     try {
-      // As of now, we are not deleting the attachment when we upload a new one. Could be 
+      // As of now, we are not deleting the image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
       await this.deleteWine();
       this.props.history.push("/");
@@ -146,45 +154,45 @@ export default class Wines extends Component {
   
   /**
    * We render our form only when this.state.wine is available.
-   * Inside the form we conditionally render the part where we display the attachment by 
-   * using this.state.wine.attachment.
-   * We format the attachment URL using formatFilename by stripping the timestamp we had 
+   * Inside the form we conditionally render the part where we display the image by 
+   * using this.state.wine.image.
+   * We format the image URL using formatFilename by stripping the timestamp we had 
    * added to the filename while uploading it.
    * We also added a delete button to allow users to delete the wine. And just like the 
    * submit button it too needs a flag that signals that the call is in progress.
-   * We handle attachments with a file input exactly like we did in the NewWine component.
+   * We handle images with a file input exactly like we did in the NewWine component.
    * Our delete button also confirms with the user if they want to delete the wine using 
    * the browser’s confirm dialog.
    */
   render() {
     return (
-      <div className="Wines">
+      <div className="Wine">
         {this.state.wine &&
           <form onSubmit={this.handleSubmit}>
-            <FormGroup controlId="content">
+            <FormGroup controlId="label">
               <FormControl
                 onChange={this.handleChange}
-                value={this.state.content}
+                value={this.state.label}
                 componentClass="textarea"
               />
             </FormGroup>
-            {this.state.wine.attachment &&
+            {this.state.wine.image &&
               <FormGroup>
-                <ControlLabel>Attachment</ControlLabel>
+                <ControlLabel>Image</ControlLabel>
                 <FormControl.Static>
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={this.state.attachmentURL}
+                    href={this.state.imageURL}
                   >
-                    {this.formatFilename(this.state.wine.attachment)}
+                    {this.formatFilename(this.state.wine.image)}
                   </a>
                 </FormControl.Static>
               </FormGroup>}
             <FormGroup controlId="file">
-              {!this.state.wine.attachment &&
-                <ControlLabel>Attachment</ControlLabel>}
-              <FormControl onChange={this.handleFileChange} type="file" />
+              {!this.state.wine.image &&
+                <ControlLabel>Image</ControlLabel>}
+              <FormControl type="file" accept={config.ACCEPTED_FILE_FORMATS} onChange={this.handleFileChange} />
             </FormGroup>
             <LoaderButton
               block

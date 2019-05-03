@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { FormGroup, FormControl } from "react-bootstrap";
 import { API } from "aws-amplify";
 import { Typeahead } from "react-bootstrap-typeahead";
 
@@ -17,7 +17,7 @@ export default class NewWine extends Component {
     this.state = {
       isLoading: null,
       systembolagetData: [],
-      content: ""
+      label: ""
     };
   }
 
@@ -39,14 +39,16 @@ export default class NewWine extends Component {
   }
 
   validateForm() {
-    return this.state.content.length > 0;
+    return this.state.label.length > 0;
   }
 
-  handleChange = event => {
-    const content = `${event[0].name} ${event[0].name2 === '' ? '' : '- ' + event[0].name2}`
-    this.setState({
-      content: content
-    });
+  handleChange = (selected) => {
+    if(selected.length) {
+      const label = `${selected[0].name}${selected[0].name2 === '' ? '' : ' (' + selected[0].name2 + ')'}`;
+      this.setState({
+        label: label
+      });
+    }
   }
 
   handleFileChange = event => {
@@ -62,28 +64,37 @@ export default class NewWine extends Component {
   handleSubmit = async event => {
     event.preventDefault();
   
-    if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-      alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
+    if (this.file && this.file.size > config.MAX_IMAGE_SIZE) {
+      alert(`Please pick a file smaller than ${config.MAX_IMAGE_SIZE/1000000} MB.`);
       return;
     }
   
     this.setState({ isLoading: true });
   
     try {
-      const attachment = this.file
-        ? await s3Upload(this.file)
+      const image = this.file
+        ? await this.fileUpload(this.file)
         : null;
   
       await this.createWine({
-        attachment,
-        content: this.state.content
+        image,
+        label: this.state.label
       });
       this.props.history.push("/");
     } catch (e) {
       alert(e);
       this.setState({ isLoading: false });
     }
-  }  
+  }
+  
+  async fileUpload(file) {
+    try {
+      return await s3Upload(file);
+    } catch (e) {
+      alert(e);
+      throw(e);
+    }
+  }
   
   createWine(wine) {
     return API.post("wines", "/wines", {
@@ -94,7 +105,7 @@ export default class NewWine extends Component {
   renderMenuItemChildren = (item, index) => {
     return [
       <div key="name">
-        <b>{item.name}</b> {item.name2 === '' ? '' : '- ' + item.name2}
+        <b>{item.name}</b>{item.name2 === '' ? '' : ' (' + item.name2 + ')'}
       </div>,
       <div key="origin">
         <small>
@@ -114,24 +125,23 @@ export default class NewWine extends Component {
    * component.
    */
   render() {
-    const props = {};
     const options = this.state.systembolagetData;
-    props.renderMenuItemChildren = this.renderMenuItemChildren;
+
     return (
       <div className="NewWine">
         <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="content">
+          <FormGroup controlId="label">
             <Typeahead
-            {...props}
-            labelKey={(option) => `${option.name} ${option.name2 === '' ? '' : '- ' + option.name2}`}
+            clearButton
+            labelKey={(option) => `${option.name}${option.name2 === '' ? '' : ' (' + option.name2 + ')'}`}
             options={options}
+            renderMenuItemChildren={this.renderMenuItemChildren}
             onChange={this.handleChange}
             placeholder="Choose your bubbles..."
             />
           </FormGroup>
           <FormGroup controlId="file">
-            <ControlLabel>Attachment</ControlLabel>
-            <FormControl onChange={this.handleFileChange} type="file" />
+            <FormControl type="file" accept={config.ACCEPTED_FILE_FORMATS} onChange={this.handleFileChange}/>
           </FormGroup>
           <LoaderButton
             block

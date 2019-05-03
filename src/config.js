@@ -1,5 +1,6 @@
 export default {
-  MAX_ATTACHMENT_SIZE: 5000000,
+  MAX_IMAGE_SIZE: 5000000,
+  ACCEPTED_FILE_FORMATS: ["image/png", "image/jpeg", "image/jpg"],
   s3: {
     REGION: "us-east-2",
     BUCKET: "bubbler-user-uploads"

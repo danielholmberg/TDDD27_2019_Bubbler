@@ -48,8 +48,8 @@ const AsyncNewWine = Loadable({
   timeout: 10000, // 10 seconds
   delay: 300 // 0.3 seconds
 });
-const AsyncWines = Loadable({
-  loader: () => import("./containers/Wines/Wines.js"),
+const AsyncWine = Loadable({
+  loader: () => import("./containers/Wine/Wine.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
   delay: 300 // 0.3 seconds
@@ -80,7 +80,12 @@ const AsyncProfile = Loadable({
  */
 export default ({ childProps }) => (
   <Switch>
-    <AppliedRoute path="/" exact component={AsyncHome} props={childProps} />
+    <AppliedRoute 
+      path="/" 
+      exact 
+      component={AsyncHome} 
+      props={childProps} 
+    />
     <UnauthenticatedRoute
       path="/login"
       exact
@@ -102,7 +107,7 @@ export default ({ childProps }) => (
     <AuthenticatedRoute
       path="/wines/:id"
       exact
-      component={AsyncWines}
+      component={AsyncWine}
       props={childProps}
     />
     <AuthenticatedRoute
