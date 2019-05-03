@@ -17,10 +17,12 @@ export async function main(event, context) {
     },
     // 'UpdateExpression' defines the attributes to be updated
     // 'ExpressionAttributeValues' defines the value in the update expression
-    UpdateExpression: "SET content = :content, attachment = :attachment",
+    UpdateExpression: "SET label = :label, image = :image, comment = :comment, rating = :rating",
     ExpressionAttributeValues: {
-      ":attachment": data.attachment || null,
-      ":content": data.content || null
+      ":image": data.image || null,
+      ":label": data.label || null,
+      ":comment": data.comment || null,
+      ":rating": data.rating || null,
     },
     // 'ReturnValues' specifies if and how to return the item's attributes,
     // where ALL_NEW returns all attributes of the item after the update; you

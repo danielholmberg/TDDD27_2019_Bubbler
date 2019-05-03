@@ -13,9 +13,11 @@ export async function main(event, context) {
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
       wineId: uuid.v1(),
-      content: data.content,
-      attachment: data.attachment,
-      createdAt: Date.now()
+      label: data.label,
+      image: data.image,
+      addedAt: Date.now(),
+      comment: data.comment,
+      rating: data.rating
     }
   };
 
