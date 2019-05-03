@@ -10,7 +10,6 @@ export default class WineListItem extends Component {
 
     this.state = {
       imageURL: null,
-      rating: 6,
     }
   }
 
@@ -32,7 +31,7 @@ export default class WineListItem extends Component {
 
   render() {
     const wineItem = this.props.item;
-    const { wineId, label, addedAt } = wineItem;
+    const { wineId, label, addedAt, comment, rating } = wineItem;
     return (
       <Card raised key={wineId} href={`/wines/${wineId}`}>
         {wineItem.image && 
@@ -47,12 +46,12 @@ export default class WineListItem extends Component {
           <Card.Meta>
             <small className='added'>{new Date(addedAt).toLocaleString()}</small>
           </Card.Meta>
-          <Card.Description>Comment</Card.Description>
+          {comment && <Card.Description>{comment}</Card.Description>}
         </Card.Content>
         <Card.Content extra>
           <center>
-            <Rating icon='star' rating={this.state.rating} maxRating={10} disabled/>
-            <small> {this.state.rating}/10</small>
+            <Rating icon='star' rating={rating} maxRating={10} disabled/>
+            <p> {rating ? rating : 0}/10</p>
           </center>
         </Card.Content>
       </Card>

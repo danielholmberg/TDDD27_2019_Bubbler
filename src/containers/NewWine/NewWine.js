@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { FormGroup, FormControl } from "react-bootstrap";
 import { API } from "aws-amplify";
 import { Typeahead } from "react-bootstrap-typeahead";
+import { Form, Rating, Segment } from "semantic-ui-react";
 
-import LoaderButton from "../../components/LoaderButton/LoaderButton.js";
 import config from "../../config.js";
 import "./NewWine.css";
 import { s3Upload } from "../../libs/awsLib.js";
@@ -17,7 +16,9 @@ export default class NewWine extends Component {
     this.state = {
       isLoading: null,
       systembolagetData: [],
-      label: ""
+      label: "",
+      comment: "",
+      rating: 0,
     };
   }
 
@@ -39,7 +40,7 @@ export default class NewWine extends Component {
   }
 
   validateForm() {
-    return this.state.label.length > 0;
+    return this.state.label.length > 0 && this.state.rating !== 0;
   }
 
   handleChange = (selected) => {
@@ -48,8 +49,14 @@ export default class NewWine extends Component {
       this.setState({
         label: label
       });
+    } else {
+      this.setState({
+        label: ""
+      })
     }
   }
+
+  handleCommentChange = (e, { value }) => this.setState({ comment: value })
 
   handleFileChange = event => {
     this.file = event.target.files[0];
@@ -78,7 +85,9 @@ export default class NewWine extends Component {
   
       await this.createWine({
         image,
-        label: this.state.label
+        label: this.state.label,
+        comment: this.state.comment,
+        rating: this.state.rating
       });
       this.props.history.push("/");
     } catch (e) {
@@ -118,6 +127,8 @@ export default class NewWine extends Component {
     ];
   }
 
+  handleRate = (e, { rating }) => this.setState({ rating })
+
   /**
    * The file input simply calls a different onChange handler (handleFileChange) that saves 
    * the file object as a class property. We use a class property instead of saving it in 
@@ -128,33 +139,31 @@ export default class NewWine extends Component {
     const options = this.state.systembolagetData;
 
     return (
-      <div className="NewWine">
-        <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="label">
-            <Typeahead
-            clearButton
-            labelKey={(option) => `${option.name}${option.name2 === '' ? '' : ' (' + option.name2 + ')'}`}
-            options={options}
-            renderMenuItemChildren={this.renderMenuItemChildren}
-            onChange={this.handleChange}
-            placeholder="Choose your bubbles..."
-            />
-          </FormGroup>
-          <FormGroup controlId="file">
-            <FormControl type="file" accept={config.ACCEPTED_FILE_FORMATS} onChange={this.handleFileChange}/>
-          </FormGroup>
-          <LoaderButton
-            block
-            bsStyle="primary"
-            bsSize="large"
-            disabled={!this.validateForm()}
-            type="submit"
-            isLoading={this.state.isLoading}
-            text="Create"
-            loadingText="Creating…"
-          />
-        </form>
-      </div>
+      <Form loading={this.state.isLoading}>
+        <label>Label</label>
+        <Typeahead
+          clearButton
+          style={{marginBottom: 16}}
+          labelKey={(option) => `${option.name}${option.name2 === '' ? '' : ' (' + option.name2 + ')'}`}
+          options={options}
+          renderMenuItemChildren={this.renderMenuItemChildren}
+          onChange={this.handleChange}
+          placeholder="Choose your bubbles..."
+        />
+        <label>Comment</label>
+        <Form.TextArea placeholder='Write a comment...' onChange={this.handleCommentChange}/>
+        <label>Image</label>
+        <input style={{marginBottom: 16}} type="file" accept={config.ACCEPTED_FILE_FORMATS} onChange={this.handleFileChange}/>
+        <center>
+          <Segment style={{marginBottom: 16}}>
+            <center>
+              <Rating icon='star' size='huge' rating={this.state.rating} onRate={this.handleRate} maxRating={10}/>
+              <p> {this.state.rating}/10</p>
+            </center>
+          </Segment> 
+        </center>
+        <Form.Button fluid color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Add</Form.Button>
+      </Form>
     );
   }
 }
