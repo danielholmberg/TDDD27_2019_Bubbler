@@ -1,11 +1,6 @@
 import React, { Component } from "react";
-import {
-  HelpBlock,
-  FormGroup,
-  FormControl,
-  ControlLabel
-} from "react-bootstrap";
-import LoaderButton from "../../components/LoaderButton/LoaderButton.js";
+import { Grid, Form, Segment, Header, Button, Message } from "semantic-ui-react";
+
 import "./Signup.css";
 import { Auth } from "aws-amplify";
 
@@ -43,9 +38,27 @@ export default class Signup extends Component {
     return this.state.confirmationCode.length > 0;
   }
 
-  handleChange = event => {
+  handleEmailChange = event => {
     this.setState({
-      [event.target.id]: event.target.value
+      email: event.target.value
+    });
+  }
+
+  handlePasswordChange = event => {
+    this.setState({
+      password: event.target.value
+    });
+  }
+  
+  handleConfirmPasswordChange = event => {
+    this.setState({
+      confirmPassword: event.target.value
+    });
+  }
+
+  handleConfirmationCodeChange = event => {
+    this.setState({
+      confirmationCode: event.target.value
     });
   }
 
@@ -103,68 +116,82 @@ export default class Signup extends Component {
 
   renderConfirmationForm() {
     return (
-      <form onSubmit={this.handleConfirmationSubmit}>
-        <FormGroup controlId="confirmationCode" bsSize="large">
-          <ControlLabel>Confirmation Code</ControlLabel>
-          <FormControl
-            autoFocus
-            type="tel"
-            value={this.state.confirmationCode}
-            onChange={this.handleChange}
-          />
-          <HelpBlock>Please check your email for the code.</HelpBlock>
-        </FormGroup>
-        <LoaderButton
-          block
-          bsSize="large"
-          disabled={!this.validateConfirmationForm()}
-          type="submit"
-          isLoading={this.state.isLoading}
-          text="Verify"
-          loadingText="Verifying…"
-        />
-      </form>
+      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as='h2' textAlign='center'>
+            Verify account
+          </Header>
+          <Form size='large' loading={this.state.isLoading}>
+            <Segment stacked>
+              <Form.Input 
+                autoFocus 
+                fluid
+                type='tel'
+                onChange={this.handleConfirmationCodeChange}
+              />
+              <Message>Please check your email for the confirmation code.</Message>
+              <Button 
+                color='blue' 
+                fluid 
+                size='large' 
+                disabled={!this.validateConfirmationForm()}
+                onClick={this.handleConfirmationSubmit}
+                >
+                Verify
+              </Button>
+            </Segment>
+          </Form>
+        </Grid.Column>
+      </Grid>
     );
   }
 
   renderForm() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <FormGroup controlId="email" bsSize="large">
-          <ControlLabel>Email</ControlLabel>
-          <FormControl
-            autoFocus
-            type="email"
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-        </FormGroup>
-        <FormGroup controlId="password" bsSize="large">
-          <ControlLabel>Password</ControlLabel>
-          <FormControl
-            value={this.state.password}
-            onChange={this.handleChange}
-            type="password"
-          />
-        </FormGroup>
-        <FormGroup controlId="confirmPassword" bsSize="large">
-          <ControlLabel>Confirm Password</ControlLabel>
-          <FormControl
-            value={this.state.confirmPassword}
-            onChange={this.handleChange}
-            type="password"
-          />
-        </FormGroup>
-        <LoaderButton
-          block
-          bsSize="large"
-          disabled={!this.validateForm()}
-          type="submit"
-          isLoading={this.state.isLoading}
-          text="Signup"
-          loadingText="Signing up…"
-        />
-      </form>
+      <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as='h2' textAlign='center'>
+            Sign up
+          </Header>
+          <Form size='large' loading={this.state.isLoading}>
+            <Segment stacked>
+              <Form.Input 
+                autoFocus 
+                fluid 
+                icon='user' 
+                iconPosition='left' 
+                placeholder='E-mail address' 
+                onChange={this.handleEmailChange}
+              />
+              <Form.Input
+                fluid
+                icon='lock'
+                iconPosition='left'
+                placeholder='Password'
+                type='password'
+                onChange={this.handlePasswordChange}
+              />
+              <Form.Input
+                fluid
+                icon='lock'
+                iconPosition='left'
+                placeholder='Confirm password'
+                type='password'
+                onChange={this.handleConfirmPasswordChange}
+              />
+              <Button 
+                color='blue' 
+                fluid 
+                size='large' 
+                disabled={!this.validateForm()}
+                onClick={this.handleSubmit}
+                >
+                Sign up
+              </Button>
+            </Segment>
+          </Form>
+        </Grid.Column>
+      </Grid>
     );
   }
 

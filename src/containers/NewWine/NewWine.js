@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { Form, Rating, Segment } from "semantic-ui-react";
+import { Form, Rating, Segment, Divider } from "semantic-ui-react";
 
 import config from "../../config.js";
 import "./NewWine.css";
@@ -17,7 +17,7 @@ export default class NewWine extends Component {
       isLoading: null,
       systembolagetData: [],
       label: "",
-      comment: "",
+      comment: null,
       rating: 0,
     };
   }
@@ -40,7 +40,7 @@ export default class NewWine extends Component {
   }
 
   validateForm() {
-    return this.state.label.length > 0 && this.state.rating !== 0;
+    return this.state.label.trim().length > 0 && this.state.rating !== 0;
   }
 
   handleChange = (selected) => {
@@ -124,6 +124,7 @@ export default class NewWine extends Component {
           <b> Country:</b> {item.countryOfOrigin === '' ? "Unkown" : item.countryOfOrigin}
         </small>
       </div>,
+      <Divider fitted />
     ];
   }
 
@@ -139,7 +140,7 @@ export default class NewWine extends Component {
     const options = this.state.systembolagetData;
 
     return (
-      <Form loading={this.state.isLoading}>
+      <Form style={{marginBottom: 16}} loading={this.state.isLoading}>
         <label>Label</label>
         <Typeahead
           clearButton
@@ -153,16 +154,16 @@ export default class NewWine extends Component {
         <label>Comment</label>
         <Form.TextArea placeholder='Write a comment...' onChange={this.handleCommentChange}/>
         <label>Image</label>
-        <input style={{marginBottom: 16}} type="file" accept={config.ACCEPTED_FILE_FORMATS} onChange={this.handleFileChange}/>
+        <Form.Input style={{marginBottom: 16}} type="file" accept={config.ACCEPTED_FILE_FORMATS} onChange={this.handleFileChange}/>
         <center>
           <Segment style={{marginBottom: 16}}>
             <center>
               <Rating icon='star' size='huge' rating={this.state.rating} onRate={this.handleRate} maxRating={10}/>
               <p> {this.state.rating}/10</p>
             </center>
-          </Segment> 
+          </Segment>
+          <Form.Button style={{width: '50%'}} color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Add</Form.Button> 
         </center>
-        <Form.Button fluid color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Add</Form.Button>
       </Form>
     );
   }

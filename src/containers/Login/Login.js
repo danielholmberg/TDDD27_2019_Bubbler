@@ -1,10 +1,8 @@
 import { Auth } from "aws-amplify";
 import React, { Component } from "react";
-import { ControlLabel, FormControl, FormGroup } from "react-bootstrap";
+import { Grid, Form, Segment, Header, Button, Message } from "semantic-ui-react";
 
-import LoaderButton from '../../components/LoaderButton/LoaderButton.js';
 import "./Login.css";
-
 
 export default class Login extends Component {
   constructor(props) {
@@ -26,9 +24,15 @@ export default class Login extends Component {
     return this.state.email.length > 0 && this.state.password.length > 0;
   }
 
-  handleChange = event => {
+  handleEmailChange = event => {
     this.setState({
-      [event.target.id]: event.target.value
+      email: event.target.value
+    });
+  }
+
+  handlePasswordChange = event => {
+    this.setState({
+      password: event.target.value
     });
   }
 
@@ -49,34 +53,45 @@ export default class Login extends Component {
   render() {
     return (
       <div className="Login">
-        <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="email" bsSize="large">
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-              autoFocus
-              type="email"
-              value={this.state.email}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-          <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-              value={this.state.password}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
-          <LoaderButton
-            block
-            bsSize="large"
-            disabled={!this.validateForm()}
-            type="submit"
-            isLoading={this.state.isLoading}
-            text="Login"
-            loadingText="Logging in…"
-          />
-        </form>
+        <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+          <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as='h2' textAlign='center'>
+              Log in to your account
+            </Header>
+            <Form size='large' loading={this.state.isLoading}>
+              <Segment stacked>
+                <Form.Input 
+                  autoFocus 
+                  fluid 
+                  icon='user' 
+                  iconPosition='left' 
+                  placeholder='E-mail address' 
+                  onChange={this.handleEmailChange}
+                />
+                <Form.Input
+                  fluid
+                  icon='lock'
+                  iconPosition='left'
+                  placeholder='Password'
+                  type='password'
+                  onChange={this.handlePasswordChange}
+                />
+                <Button 
+                  color='blue' 
+                  fluid 
+                  size='large' 
+                  disabled={!this.validateForm()}
+                  onClick={this.handleSubmit}
+                  >
+                  Login
+                </Button>
+              </Segment>
+            </Form>
+            <Message>
+              New to us? <a href='/signup'>Sign up</a>
+            </Message>
+          </Grid.Column>
+        </Grid>
       </div>
     );
   }
