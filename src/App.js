@@ -13,9 +13,14 @@ class App extends Component {
 
     this.state = {
       isAuthenticated: false,
-      isAuthenticating: true
+      isAuthenticating: true,
+      mobile: window.innerWidth <= 500,
     };
   }
+
+  handleWindowSizeChange = () => {
+    this.setState({ mobile: window.innerWidth <= 500 });
+  };
 
   /**
    * All this does is load the current session. If it loads, then it updates
@@ -25,6 +30,7 @@ class App extends Component {
    * when they load up our app and are not signed in.
    */
   async componentDidMount() {
+    window.addEventListener('resize', this.handleWindowSizeChange);
     try {
       await Auth.currentSession();
       this.userHasAuthenticated(true);
@@ -35,6 +41,10 @@ class App extends Component {
     }
 
     this.setState({ isAuthenticating: false });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowSizeChange);
   }
 
   userHasAuthenticated = authenticated => {
@@ -69,8 +79,11 @@ class App extends Component {
   render() {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated
+      userHasAuthenticated: this.userHasAuthenticated,
+      mobile: this.state.mobile
     };
+
+    const profile = 'Profile', logout = 'Logout', login = 'Login', signup = 'Sign up';
 
     return (
       !this.state.isAuthenticating && (
@@ -86,24 +99,22 @@ class App extends Component {
                 <Menu.Menu position='right'>
                   <LinkContainer to="/profile">
                     <Menu.Item>
-                      <Icon name='user circle'/>
-                      Profile
+                      <Icon name='user circle'/>{!this.state.mobile && profile}
                     </Menu.Item>
                   </LinkContainer>
                   <Menu.Item onClick={this.handleLogout}>
-                    <Icon name='log out'/>
-                    Logout
+                    <Icon name='log out'/>{!this.state.mobile && logout}
                   </Menu.Item>
                 </Menu.Menu>) : (
                 <Menu.Menu position='right'>
                   <LinkContainer to="/signup">
                     <Menu.Item>
-                      Signup
+                      <Icon name='add user'/>{!this.state.mobile && signup}
                     </Menu.Item>
                   </LinkContainer>
                   <LinkContainer to="/login">
                     <Menu.Item>
-                      Login
+                      <Icon name='sign in'/>{!this.state.mobile && login}
                     </Menu.Item>
                   </LinkContainer>  
                 </Menu.Menu>

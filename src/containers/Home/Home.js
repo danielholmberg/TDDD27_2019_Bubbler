@@ -52,7 +52,7 @@ export default class Home extends Component {
       <div className="wines">
         <Header as='h1'><center>Shared Bubbles</center></Header>
         <center>
-          <Button primary href="/wines/new" style={{ marginBottom: 16, width: '50%', backgroundColor: 'green' }}>
+          <Button primary href="/wines/new" style={{ marginBottom: 16, width: this.props.mobile ? '100%' : '50%', backgroundColor: 'green' }}>
             <Icon name='add'/> Add more bubbles
           </Button>
         </center>
