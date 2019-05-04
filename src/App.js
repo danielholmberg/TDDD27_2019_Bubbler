@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
+import { Menu, Container, Icon } from "semantic-ui-react";
 
 import Routes from "./Routes.js";
 import "./App.css";
@@ -62,6 +62,9 @@ class App extends Component {
    * ensure that our app does not change states when it first loads. To do
    * this we’ll hold off rendering our app till isAuthenticating is false.
    * We’ll conditionally render our app based on the isAuthenticating flag.
+   * 
+   * <Link> component from 'react-router-dom' helps avoid refreshing the webpage
+   * when routing the user to path='/'
    */
   render() {
     const childProps = {
@@ -72,38 +75,45 @@ class App extends Component {
     return (
       !this.state.isAuthenticating && (
         <div className="App container">
-          <Navbar fluid collapseOnSelects>
-            <Navbar.Header>
-              <Navbar.Brand>
-                <Link to="/" style={{ fontFamily: "Bungee Inline" }}>
+          <Menu fixed='top' inverted>
+            <Container>
+              <Link to="/" style={{ textDecoration: 'none' }}>
+                <Menu.Item as='a' header style={{ fontFamily: "Bungee Inline" }}>
                   BUBBLER
-                </Link>
-              </Navbar.Brand>
-              <Navbar.Toggle />
-            </Navbar.Header>
-            <Navbar.Collapse>
-              <Nav pullRight>
-                {this.state.isAuthenticated ? (
-                  <Fragment>
-                    <LinkContainer to="/profile">
-                      <NavItem>Profile</NavItem>
-                    </LinkContainer>
-                    <NavItem onClick={this.handleLogout}>Logout</NavItem>
-                  </Fragment>
-                ) : (
-                  <Fragment>
-                    <LinkContainer to="/signup">
-                      <NavItem>Signup</NavItem>
-                    </LinkContainer>
-                    <LinkContainer to="/login">
-                      <NavItem>Login</NavItem>
-                    </LinkContainer>
-                  </Fragment>
-                )}
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-          <Routes childProps={childProps} />
+                </Menu.Item>
+              </Link>
+              {this.state.isAuthenticated ? (
+                <Menu.Menu position='right'>
+                  <LinkContainer to="/profile">
+                    <Menu.Item>
+                      <Icon name='user circle'/>
+                      Profile
+                    </Menu.Item>
+                  </LinkContainer>
+                  <Menu.Item onClick={this.handleLogout}>
+                    <Icon name='log out'/>
+                    Logout
+                  </Menu.Item>
+                </Menu.Menu>) : (
+                <Menu.Menu position='right'>
+                  <LinkContainer to="/signup">
+                    <Menu.Item>
+                      Signup
+                    </Menu.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/login">
+                    <Menu.Item>
+                      Login
+                    </Menu.Item>
+                  </LinkContainer>  
+                </Menu.Menu>
+                )
+              }
+            </Container>
+          </Menu>
+          <Container style={{ marginTop: '60px' }}>
+            <Routes childProps={childProps} />
+          </Container>
         </div>
       )
     );

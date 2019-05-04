@@ -2,16 +2,3 @@
   --primary-color: #57B4D5;
   --secondary-color: #FCF0AD;
 }
-
-.App {
-  margin-top: 15px;
-}
-
-.App .navbar {
-  background: #242424
-}
-
-.App .navbar-brand {
-  font-weight: bold;
-  color: var(--secondary-color);
-}
