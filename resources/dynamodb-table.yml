@@ -1,0 +1,19 @@
+Resources:
+  WinesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.tableName}
+      KeySchema:
+        - AttributeName: "userId"
+          KeyType: "HASH"
+        - AttributeName: "wineId"
+          KeyType: "RANGE"
+      AttributeDefinitions:
+        - AttributeName: "userId"
+          AttributeType: "S"
+        - AttributeName: "wineId"
+          AttributeType: "S"
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}
