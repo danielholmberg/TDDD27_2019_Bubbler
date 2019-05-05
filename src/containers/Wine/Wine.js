@@ -46,7 +46,7 @@ export default class Wines extends Component {
       const { image, label, comment, rating } = wine;
 
       if (image) {
-        imageURL = await Storage.vault.get(image);
+        imageURL = await Storage.get(image);
       }
 
       const systembolagetData = await this.getSystembolagetData();
@@ -65,11 +65,11 @@ export default class Wines extends Component {
   }
 
   getSystembolagetData() {
-    return API.get("systembolaget", "/systembolaget");
+    return API.get("bubbler", "/systembolaget");
   }
 
   getWine() {
-    return API.get("wines", `/wines/${this.props.match.params.id}`);
+    return API.get("bubbler", `/wines/${this.props.match.params.id}`);
   }
   
   validateForm() {

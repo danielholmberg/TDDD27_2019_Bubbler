@@ -14,7 +14,7 @@ export default class WineListItem extends Component {
   }
 
   loadimage(image) {
-    return Storage.vault.get(image);
+    return Storage.get(image);
   }
 
   async componentDidMount() {

@@ -36,7 +36,7 @@ export default class NewWine extends Component {
   }
 
   getSystembolagetData() {
-    return API.get("systembolaget", "/systembolaget");
+    return API.get("bubbler", "/systembolaget");
   }
 
   validateForm() {
@@ -106,7 +106,7 @@ export default class NewWine extends Component {
   }
   
   createWine(wine) {
-    return API.post("wines", "/wines", {
+    return API.post("bubbler", "/wines", {
       body: wine
     });
   }  

@@ -38,7 +38,7 @@ export default class Profile extends Component {
   }
 
   wines() {
-    return API.get("wines", "/wines");
+    return API.get("bubbler", "/wines");
   }
 
   renderWineList(wines) {

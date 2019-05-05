@@ -36,12 +36,7 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: "wines",
-        endpoint: config.apiGateway.URL,
-        region: config.apiGateway.REGION
-      },
-      {
-        name: "systembolaget",
+        name: "bubbler",
         endpoint: config.apiGateway.URL,
         region: config.apiGateway.REGION
       }

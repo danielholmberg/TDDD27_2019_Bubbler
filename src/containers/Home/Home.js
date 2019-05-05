@@ -31,7 +31,7 @@ export default class Home extends Component {
   }
   
   getWines() {
-    return API.get("wines", "/wines");
+    return API.get("bubbler", "/feed");
   }  
 
   renderWineList(wines) {
