@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { API, Storage } from "aws-amplify";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Typeahead } from "react-bootstrap-typeahead";
+import { Form, Segment, Rating } from "semantic-ui-react";
 
-import LoaderButton from "../../components/LoaderButton/LoaderButton.js";
 import config from "../../config.js";
 import "./Wine.css";
 import { s3Upload } from "../../libs/awsLib.js";
@@ -25,26 +25,38 @@ export default class Wines extends Component {
     this.state = {
       isLoading: null,
       isDeleting: null,
-      wine: null,
+      systembolagetData: [],
       label: "",
+      comment: null,
+      rating: 0,
+      wine: null,
       imageURL: null
     };
     
   }
 
   async componentDidMount() {
+    if(!this.props.isAuthenticated) {
+      return;
+    } 
+
     try {
       let imageURL;
       const wine = await this.getWine();
-      const { label, image } = wine;
+      const { image, label, comment, rating } = wine;
 
       if (image) {
         imageURL = await Storage.vault.get(image);
       }
 
+      const systembolagetData = await this.getSystembolagetData();
+
       this.setState({
-        wine,
+        systembolagetData,
         label,
+        comment,
+        rating,
+        wine,
         imageURL
       });
     } catch (e) {
@@ -52,32 +64,39 @@ export default class Wines extends Component {
     }
   }
 
+  getSystembolagetData() {
+    return API.get("systembolaget", "/systembolaget");
+  }
+
   getWine() {
     return API.get("wines", `/wines/${this.props.match.params.id}`);
   }
-
-  validateForm() {
-    return this.state.label.length > 0;
-  }
   
+  validateForm() {
+    return this.state.label.trim().length > 0 && this.state.rating !== 0;
+  }
+
   formatFilename(str) {
     return str.replace(/^\w+-/, "");
   }
-  
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
+
+  handleChange = (selected) => {
+    if(selected.length) {
+      const label = `${selected[0].name}${selected[0].name2 === '' ? '' : ' (' + selected[0].name2 + ')'}`;
+      this.setState({
+        label: label
+      });
+    } else {
+      this.setState({
+        label: ""
+      })
+    }
   }
+
+  handleCommentChange = (e, { value }) => this.setState({ comment: value })
   
   handleFileChange = event => {
     this.file = event.target.files[0];
-  }
-  
-  saveWine(wine) {
-    return API.put("wines", `/wines/${this.props.match.params.id}`, {
-      body: wine
-    });
   }
   
   /**
@@ -104,8 +123,10 @@ export default class Wines extends Component {
       // As of now, we are not deleting the old image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
       await this.saveWine({
+        image: image || this.state.wine.image,
         label: this.state.label,
-        image: image || this.state.wine.image
+        comment: this.state.comment,
+        rating: this.state.rating
       });
       this.props.history.push("/");
     } catch (e) {
@@ -121,6 +142,12 @@ export default class Wines extends Component {
       alert(e);
       throw(e);
     }
+  }
+
+  saveWine(wine) {
+    return API.put("wines", `/wines/${this.props.match.params.id}`, {
+      body: wine
+    });
   }
   
   deleteWine() {
@@ -150,7 +177,24 @@ export default class Wines extends Component {
       this.setState({ isDeleting: false });
     }
   }
-  
+
+  renderMenuItemChildren = (item, index) => {
+    return [
+      <div key="name">
+        <b>{item.name}</b>{item.name2 === '' ? '' : ' (' + item.name2 + ')'}
+      </div>,
+      <div key="origin">
+        <small>
+          <b>Origin:</b> {item.origin === '' ? "Unkown" : item.origin}
+        </small>
+        <small>
+          <b> Country:</b> {item.countryOfOrigin === '' ? "Unkown" : item.countryOfOrigin}
+        </small>
+      </div>,
+    ];
+  }
+
+  handleRate = (e, { rating }) => this.setState({ rating })
   
   /**
    * We render our form only when this.state.wine is available.
@@ -165,55 +209,54 @@ export default class Wines extends Component {
    * the browser’s confirm dialog.
    */
   render() {
+    const { isLoading, systembolagetData, label, wine, imageURL } = this.state;
+
     return (
-      <div className="Wine">
-        {this.state.wine &&
-          <form onSubmit={this.handleSubmit}>
-            <FormGroup controlId="label">
-              <FormControl
-                onChange={this.handleChange}
-                value={this.state.label}
-                componentClass="textarea"
-              />
-            </FormGroup>
-            {this.state.wine.image &&
-              <FormGroup>
-                <ControlLabel>Image</ControlLabel>
-                <FormControl.Static>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={this.state.imageURL}
-                  >
-                    {this.formatFilename(this.state.wine.image)}
-                  </a>
-                </FormControl.Static>
-              </FormGroup>}
-            <FormGroup controlId="file">
-              {!this.state.wine.image &&
-                <ControlLabel>Image</ControlLabel>}
-              <FormControl type="file" accept={config.ACCEPTED_FILE_FORMATS} onChange={this.handleFileChange} />
-            </FormGroup>
-            <LoaderButton
-              block
-              bsStyle="primary"
-              bsSize="large"
-              disabled={!this.validateForm()}
-              type="submit"
-              isLoading={this.state.isLoading}
-              text="Save"
-              loadingText="Saving…"
-            />
-            <LoaderButton
-              block
-              bsStyle="danger"
-              bsSize="large"
-              isLoading={this.state.isDeleting}
-              onClick={this.handleDelete}
-              text="Delete"
-              loadingText="Deleting…"
-            />
-          </form>}
+      <div>
+      {wine &&
+      <Form loading={isLoading}>
+        <label>Label</label>
+        <Typeahead
+          clearButton
+          style={{marginBottom: 16}}
+          labelKey={(option) => `${option.name}${option.name2 === '' ? '' : ' (' + option.name2 + ')'}`}
+          options={systembolagetData}
+          defaultInputValue={label}
+          renderMenuItemChildren={this.renderMenuItemChildren}
+          onChange={this.handleChange}
+          placeholder="Choose your bubbles..."
+        />
+        <label>Comment</label>
+        <Form.TextArea placeholder='Write a comment...' value={this.state.comment || ""} onChange={this.handleCommentChange}/>
+        <label>Image</label>
+        {wine.image && 
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={imageURL}
+          >
+            {' '+this.formatFilename(wine.image)}
+          </a>
+        }
+        {!wine.image &&
+          <Form.Input 
+            style={{marginBottom: 16}} 
+            type="file" 
+            accept={config.ACCEPTED_FILE_FORMATS} 
+            onChange={this.handleFileChange}/>
+        }
+        <center>
+          <Segment style={{marginBottom: 16, marginTop: 8}}>
+            <center>
+              <Rating icon='star' size='huge' rating={this.state.rating} onRate={this.handleRate} maxRating={10}/>
+              <p> {this.state.rating}/10</p>
+            </center>
+          </Segment> 
+          <Form.Button style={{width: '50%'}} color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Save</Form.Button>
+          <Form.Button style={{width: '50%'}} color='red' onClick={this.handleDelete}>Delete</Form.Button>
+        </center>
+      </Form>
+      }
       </div>
     );
   }  
