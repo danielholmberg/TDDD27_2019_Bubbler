@@ -76,17 +76,6 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
-  # Defines an HTTP API endpoint that calls the main function in list.js
-  # - path: url path is /wines
-  # - method: GET request
-  list:
-      handler: list.main
-      events:
-        - http:
-            path: wines
-            method: get
-            cors: true
-            authorizer: aws_iam
   # Defines an HTTP API endpoint that calls the main function in update.js
   # - path: url path is /wines/{id}
   # - method: PUT request
@@ -107,6 +96,28 @@ functions:
       - http:
           path: wines/{id}
           method: delete
+          cors: true
+          authorizer: aws_iam
+  # Defines an HTTP API endpoint that calls the main function in getUserCellar.js
+  # - path: url path is /wines
+  # - method: GET request
+  getUserCellar:
+    handler: getUserCellar.main
+    events:
+      - http:
+          path: wines
+          method: get
+          cors: true
+          authorizer: aws_iam
+  # Defines an HTTP API endpoint that calls the main function in getFeed.js
+  # - path: url path is /feed
+  # - method: GET request
+  getFeed:
+    handler: getFeed.main
+    events:
+      - http:
+          path: feed
+          method: get
           cors: true
           authorizer: aws_iam
   # Defines an HTTP API endpoint that calls the main function in getSystembolagetData.js
