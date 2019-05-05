@@ -88,7 +88,7 @@ class App extends Component {
     return (
       !this.state.isAuthenticating && (
         <div className="App container">
-          <Menu fixed='top' inverted>
+          <Menu fixed='top' size='large' inverted>
             <Container>
               <Link to="/" style={{ textDecoration: 'none' }}>
                 <Menu.Item as='a' header style={{ fontFamily: "Bungee Inline" }}>
