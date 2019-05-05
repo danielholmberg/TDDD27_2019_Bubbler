@@ -21,7 +21,7 @@ export default class Home extends Component {
     }
   
     try {
-      const wines = await this.wines();
+      const wines = await this.getWines();
       this.setState({ wines });
     } catch (e) {
       alert(e);
@@ -30,7 +30,7 @@ export default class Home extends Component {
     this.setState({ isLoading: false });
   }
   
-  wines() {
+  getWines() {
     return API.get("wines", "/wines");
   }  
 
