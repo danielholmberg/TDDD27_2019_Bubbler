@@ -3,7 +3,7 @@ export default {
   ACCEPTED_FILE_FORMATS: ["image/png", "image/jpeg", "image/jpg"],
   s3: {
     REGION: "us-east-2",
-    BUCKET: "bubbler-user-uploads"
+    BUCKET: "bubbler-api-prod-imagesbucket-zwyush72ktle"
   },
   apiGateway: {
     REGION: "us-east-2",
@@ -11,8 +11,8 @@ export default {
   },
   cognito: {
     REGION: "us-east-2",
-    USER_POOL_ID: "us-east-2_3ibVmw8SG",
-    APP_CLIENT_ID: "58kmqapteiqp0v7nb390t85tqn",
-    IDENTITY_POOL_ID: "us-east-2:e392833e-5dd8-4049-a8f6-f0f4f57f7aa9"
+    USER_POOL_ID: "us-east-2_XvFYyc4fb",
+    APP_CLIENT_ID: "6b6k6b8kuh65sp47krh4o2c8jr",
+    IDENTITY_POOL_ID: "us-east-2:dc57d1c2-166b-4d5d-b92a-bdc3dc370dd4"
   }
 };
