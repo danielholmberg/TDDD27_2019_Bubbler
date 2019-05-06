@@ -145,13 +145,13 @@ export default class Wines extends Component {
   }
 
   saveWine(wine) {
-    return API.put("wines", `/wines/${this.props.match.params.id}`, {
+    return API.put("bubbler", `/wines/${this.props.match.params.id}`, {
       body: wine
     });
   }
   
   deleteWine() {
-    return API.del("wines", `/wines/${this.props.match.params.id}`);
+    return API.del("bubbler", `/wines/${this.props.match.params.id}`);
   }
   
   handleDelete = async event => {
