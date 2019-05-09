@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Storage } from 'aws-amplify';
 import { Card, Rating, Image } from 'semantic-ui-react'
 
-import "./WineListItem.css";
+import "./PostListItem.css";
 
-export default class WineListItem extends Component {
+export default class PostListItem extends Component {
   constructor(props) {
     super(props)
 
@@ -30,11 +30,11 @@ export default class WineListItem extends Component {
   handleRate
 
   render() {
-    const wineItem = this.props.item;
-    const { wineId, label, addedAt, comment, rating } = wineItem;
+    const post = this.props.item;
+    const { postId, image, label, comment, rating, addedAt, updatedAt } = post;
     return (
-      <Card raised key={wineId} href={`/wines/${wineId}`}>
-        {wineItem.image && 
+      <Card raised key={postId} href={`/posts/${postId}`}>
+        {image && 
         <Image
         centered
         style={{ maxWidth: 200, maxHeight: 200 }}
@@ -44,7 +44,9 @@ export default class WineListItem extends Component {
         <Card.Content>
           <Card.Header>{label}</Card.Header>
           <Card.Meta>
-            <small className='added'>{new Date(addedAt).toLocaleString()}</small>
+            <small className='added'>Added: {new Date(addedAt).toLocaleString()}</small>
+            {updatedAt && 
+            <small className='updated'>Updated: {new Date(updatedAt).toLocaleString()}</small>} 
           </Card.Meta>
           {comment && <Card.Description>{comment}</Card.Description>}
         </Card.Content>

@@ -12,7 +12,7 @@ import * as serviceWorker from './serviceWorker';
  *  - Amplify refers to Cognito as Auth, S3 as Storage, and API Gateway as API.
  *  - The mandatorySignIn flag for Auth is set to true because we want our users 
  *    to be signed in before they can interact with our app.
- *  - The name: "wines" is basically telling Amplify that we want to name our API. 
+ *  - The name: "bubbler" is basically telling Amplify that we want to name our API. 
  *    Amplify allows you to add multiple APIs that your app is going to work with. 
  *    In our case our entire backend is just one single API.
 

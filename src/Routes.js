@@ -42,14 +42,14 @@ const AsyncSignup = Loadable({
   timeout: 10000, // 10 seconds
   delay: 300 // 0.3 seconds
 });
-const AsyncNewWine = Loadable({
-  loader: () => import("./containers/NewWine/NewWine.js"),
+const AsyncNewPost = Loadable({
+  loader: () => import("./containers/NewPost/NewPost.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
   delay: 300 // 0.3 seconds
 });
-const AsyncWine = Loadable({
-  loader: () => import("./containers/Wine/Wine.js"),
+const AsyncPost = Loadable({
+  loader: () => import("./containers/Post/Post.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
   delay: 300 // 0.3 seconds
@@ -73,9 +73,9 @@ const AsyncProfile = Loadable({
  * We are also using the exact prop to ensure that it matches the / route exactly.
  * This is because the path / will also match any route that starts with a /.
  *
- * By using the route path /wines/:id we are telling the router to send all matching
- * routes to our component Wines. This will also end up matching the route /wines/new
- * with an id of new. To ensure that doesn’t happen, we put our /wines/new route before
+ * By using the route path /posts/:id we are telling the router to send all matching
+ * routes to our component Post. This will also end up matching the route /posts/new
+ * with an id of new. To ensure that doesn’t happen, we put our /posts/new route before
  * the pattern matching one.
  */
 export default ({ childProps }) => (
@@ -99,15 +99,15 @@ export default ({ childProps }) => (
       props={childProps}
     />
     <AuthenticatedRoute
-      path="/wines/new"
+      path="/posts/new"
       exact
-      component={AsyncNewWine}
+      component={AsyncNewPost}
       props={childProps}
     />
     <AuthenticatedRoute
-      path="/wines/:id"
+      path="/posts/:id"
       exact
-      component={AsyncWine}
+      component={AsyncPost}
       props={childProps}
     />
     <AuthenticatedRoute

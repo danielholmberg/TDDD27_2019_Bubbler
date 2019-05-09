@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { API, Auth } from "aws-amplify";
 import { Segment, Header } from "semantic-ui-react";
 
-import WineList from "../../components/WineList/WineList.js";
+import PostList from "../../components/PostList/PostList.js";
 import "./Profile.css";
 
 export default class Profile extends Component {
@@ -11,7 +11,7 @@ export default class Profile extends Component {
 
     this.state = {
       isLoading: true,
-      wines: [],
+      posts: [],
       user: null
     };
   }
@@ -22,14 +22,14 @@ export default class Profile extends Component {
     }
 
     try {
-      const wines = await this.wines();
+      const posts = await this.getPosts();
       const user = await Auth.currentAuthenticatedUser()
       .then(user => user)
       .catch(e => {
         alert(e);
         this.props.history.push("/login");
       });
-      this.setState({ wines, user });
+      this.setState({ posts, user });
     } catch (e) {
       alert(e);
     }
@@ -37,12 +37,12 @@ export default class Profile extends Component {
     this.setState({ isLoading: false });
   }
 
-  wines() {
-    return API.get("bubbler", "/wines");
+  getPosts() {
+    return API.get("bubbler", "/posts");
   }
 
-  renderWineList(wines) {
-    return <WineList items={wines}/>;
+  renderPostList(posts) {
+    return <PostList items={posts}/>;
   }
 
   renderHeaderSection() {
@@ -54,7 +54,7 @@ export default class Profile extends Component {
           <center>{user && user.attributes.email}</center>
         </Segment>
         <Header as='h2'><center>Your Cellar</center></Header>
-        {this.renderWineList(this.state.wines)}
+        {this.renderPostList(this.state.posts)}
       </div>
     );
   }

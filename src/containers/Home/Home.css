@@ -12,7 +12,7 @@
   color: #999;
 }
 
-.Home .wines h4 {
+.Home .posts h4 {
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
   overflow: hidden;
@@ -20,7 +20,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.Home .wines p {
+.Home .posts p {
   color: #666;
 }
 

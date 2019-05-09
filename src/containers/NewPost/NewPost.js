@@ -4,10 +4,10 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import { Form, Rating, Segment, Divider } from "semantic-ui-react";
 
 import config from "../../config.js";
-import "./NewWine.css";
+import "./NewPost.css";
 import { s3Upload } from "../../libs/awsLib.js";
 
-export default class NewWine extends Component {
+export default class NewPost extends Component {
   constructor(props) {
     super(props);
 
@@ -16,6 +16,7 @@ export default class NewWine extends Component {
     this.state = {
       isLoading: null,
       systembolagetData: [],
+      productId: null,
       label: "",
       comment: null,
       rating: 0,
@@ -45,9 +46,9 @@ export default class NewWine extends Component {
 
   handleChange = (selected) => {
     if(selected.length) {
-      const label = `${selected[0].name}${selected[0].name2 === '' ? '' : ' (' + selected[0].name2 + ')'}`;
       this.setState({
-        label: label
+        productId: selected[0].itemId, // Artikel-id
+        label: `${selected[0].name}${selected[0].name2 === '' ? '' : ' (' + selected[0].name2 + ')'}`
       });
     } else {
       this.setState({
@@ -63,10 +64,10 @@ export default class NewWine extends Component {
   }
 
   /**
-   * We make our create call in createWine by making a POST request to /wines and passing 
-   * in our wine object. We upload the file using the s3Upload method.
-   * We then use the returned key and add that to the wine object when we create a new wine.
-   * Finally, after the wine is created we redirect to our homepage.
+   * We make our create call in createPost by making a POST request to /posts and passing 
+   * in our Post object. We upload the file using the s3Upload method.
+   * We then use the returned key and add that to the Post object when we create a new post.
+   * Finally, after the post is created we redirect to our homepage.
    */
   handleSubmit = async event => {
     event.preventDefault();
@@ -83,7 +84,8 @@ export default class NewWine extends Component {
         ? await this.fileUpload(this.file)
         : null;
   
-      await this.createWine({
+      await this.createPost({
+        productId: this.state.productId,
         image,
         label: this.state.label,
         comment: this.state.comment,
@@ -105,9 +107,9 @@ export default class NewWine extends Component {
     }
   }
   
-  createWine(wine) {
-    return API.post("bubbler", "/wines", {
-      body: wine
+  createPost(post) {
+    return API.post("bubbler", "/posts", {
+      body: post
     });
   }  
 
@@ -118,7 +120,10 @@ export default class NewWine extends Component {
       </div>,
       <div key="origin">
         <small>
-          <b>Origin:</b> {item.origin === '' ? "Unkown" : item.origin}
+          <b>Price:</b> {item.price} SEK
+        </small>
+        <small>
+          <b> Volume:</b> {item.volume} ml
         </small>
         <small>
           <b> Country:</b> {item.countryOfOrigin === '' ? "Unkown" : item.countryOfOrigin}
@@ -137,16 +142,14 @@ export default class NewWine extends Component {
    * component.
    */
   render() {
-    const options = this.state.systembolagetData;
-
     return (
       <Form style={{marginBottom: 16}} loading={this.state.isLoading}>
         <label>Label</label>
         <Typeahead
           clearButton
           style={{marginBottom: 16}}
-          labelKey={(option) => `${option.name}${option.name2 === '' ? '' : ' (' + option.name2 + ')'}`}
-          options={options}
+          labelKey={(item) => `${item.name}${item.name2 === '' ? '' : ' (' + item.name2 + ')'}`}
+          options={this.state.systembolagetData}
           renderMenuItemChildren={this.renderMenuItemChildren}
           onChange={this.handleChange}
           placeholder="Choose your bubbles..."

@@ -1,22 +1,22 @@
 import React, { Component } from "react";
 import { API, Storage } from "aws-amplify";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { Form, Segment, Rating } from "semantic-ui-react";
+import { Form, Segment, Rating, Divider } from "semantic-ui-react";
 
 import config from "../../config.js";
-import "./Wine.css";
+import "./Post.css";
 import { s3Upload } from "../../libs/awsLib.js";
 
 /**
- * Load the wine on componentDidMount and save it to the state. We get the id of our wine 
+ * Load the post on componentDidMount and save it to the state. We get the id of our post 
  * from the URL using the props automatically passed to us by React-Router in 
  * this.props.match.params.id. The keyword id is a part of the pattern matching in our 
- * route (/wines/:id). If there is an image, we use the key to get a secure link to 
+ * route (/posts/:id). If there is an image, we use the key to get a secure link to 
  * the file we uploaded to S3. We then store this to the component’s state as imageURL.
- * The reason why we have the wine object in the state along with the label and the 
- * imageURL is because we use this when the user edits the wine.
+ * The reason why we have the post object in the state along with the label and the 
+ * imageURL is because we use this when the user edits the post.
  */
-export default class Wines extends Component {
+export default class Post extends Component {
   constructor(props) {
     super(props);
 
@@ -29,7 +29,7 @@ export default class Wines extends Component {
       label: "",
       comment: null,
       rating: 0,
-      wine: null,
+      post: null,
       imageURL: null
     };
     
@@ -42,8 +42,8 @@ export default class Wines extends Component {
 
     try {
       let imageURL;
-      const wine = await this.getWine();
-      const { image, label, comment, rating } = wine;
+      const post = await this.getPost();
+      const { image, label, comment, rating } = post;
 
       if (image) {
         imageURL = await Storage.get(image);
@@ -56,7 +56,7 @@ export default class Wines extends Component {
         label,
         comment,
         rating,
-        wine,
+        post,
         imageURL
       });
     } catch (e) {
@@ -68,8 +68,8 @@ export default class Wines extends Component {
     return API.get("bubbler", "/systembolaget");
   }
 
-  getWine() {
-    return API.get("bubbler", `/wines/${this.props.match.params.id}`);
+  getPost() {
+    return API.get("bubbler", `/posts/${this.props.match.params.id}`);
   }
   
   validateForm() {
@@ -82,9 +82,9 @@ export default class Wines extends Component {
 
   handleChange = (selected) => {
     if(selected.length) {
-      const label = `${selected[0].name}${selected[0].name2 === '' ? '' : ' (' + selected[0].name2 + ')'}`;
       this.setState({
-        label: label
+        productId: selected[0].itemId,
+        label: `${selected[0].name}${selected[0].name2 ? '' : ' (' + selected[0].name2 + ')'}`
       });
     } else {
       this.setState({
@@ -101,7 +101,7 @@ export default class Wines extends Component {
   
   /**
    * If there is a file to upload we call s3Upload to upload it and save the key we get from S3.
-   * We save the wine by making a PUT request with the wine object to /wines/:id where we get the 
+   * We save the post by making a PUT request with the post object to /posts/:id where we get the 
    * id from this.props.match.params.id. We use the API.put() method from AWS Amplify.
    * And on success we redirect the user to the homepage.
    */
@@ -122,8 +122,8 @@ export default class Wines extends Component {
   
       // As of now, we are not deleting the old image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
-      await this.saveWine({
-        image: image || this.state.wine.image,
+      await this.savePost({
+        image: image || this.state.post.image,
         label: this.state.label,
         comment: this.state.comment,
         rating: this.state.rating
@@ -144,14 +144,14 @@ export default class Wines extends Component {
     }
   }
 
-  saveWine(wine) {
-    return API.put("bubbler", `/wines/${this.props.match.params.id}`, {
-      body: wine
+  savePost(post) {
+    return API.put("bubbler", `/posts/${this.props.match.params.id}`, {
+      body: post
     });
   }
   
-  deleteWine() {
-    return API.del("bubbler", `/wines/${this.props.match.params.id}`);
+  deletePost() {
+    return API.del("bubbler", `/posts/${this.props.match.params.id}`);
   }
   
   handleDelete = async event => {
@@ -170,7 +170,7 @@ export default class Wines extends Component {
     try {
       // As of now, we are not deleting the image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
-      await this.deleteWine();
+      await this.deletePost();
       this.props.history.push("/");
     } catch (e) {
       alert(e);
@@ -185,41 +185,45 @@ export default class Wines extends Component {
       </div>,
       <div key="origin">
         <small>
-          <b>Origin:</b> {item.origin === '' ? "Unkown" : item.origin}
+          <b>Price:</b> {item.price} SEK
+        </small>
+        <small>
+          <b> Volume:</b> {item.volume} ml
         </small>
         <small>
           <b> Country:</b> {item.countryOfOrigin === '' ? "Unkown" : item.countryOfOrigin}
         </small>
       </div>,
+      <Divider fitted />
     ];
   }
 
   handleRate = (e, { rating }) => this.setState({ rating })
   
   /**
-   * We render our form only when this.state.wine is available.
+   * We render our form only when this.state.post is available.
    * Inside the form we conditionally render the part where we display the image by 
-   * using this.state.wine.image.
+   * using this.state.post.image.
    * We format the image URL using formatFilename by stripping the timestamp we had 
    * added to the filename while uploading it.
-   * We also added a delete button to allow users to delete the wine. And just like the 
+   * We also added a delete button to allow users to delete the post. And just like the 
    * submit button it too needs a flag that signals that the call is in progress.
-   * We handle images with a file input exactly like we did in the NewWine component.
-   * Our delete button also confirms with the user if they want to delete the wine using 
+   * We handle images with a file input exactly like we did in the NewPost component.
+   * Our delete button also confirms with the user if they want to delete the post using 
    * the browser’s confirm dialog.
    */
   render() {
-    const { isLoading, systembolagetData, label, wine, imageURL } = this.state;
+    const { isLoading, systembolagetData, label, post, imageURL } = this.state;
 
     return (
       <div>
-      {wine &&
+      {post &&
       <Form loading={isLoading}>
         <label>Label</label>
         <Typeahead
           clearButton
           style={{marginBottom: 16}}
-          labelKey={(option) => `${option.name}${option.name2 === '' ? '' : ' (' + option.name2 + ')'}`}
+          labelKey={(item) => `${item.name}${item.name2 === '' ? '' : ' (' + item.name2 + ')'}`}
           options={systembolagetData}
           defaultInputValue={label}
           renderMenuItemChildren={this.renderMenuItemChildren}
@@ -229,16 +233,16 @@ export default class Wines extends Component {
         <label>Comment</label>
         <Form.TextArea placeholder='Write a comment...' value={this.state.comment || ""} onChange={this.handleCommentChange}/>
         <label>Image</label>
-        {wine.image && 
+        {post.image && 
           <a
             target="_blank"
             rel="noopener noreferrer"
             href={imageURL}
           >
-            {' '+this.formatFilename(wine.image)}
+            {' '+this.formatFilename(post.image)}
           </a>
         }
-        {!wine.image &&
+        {!post.image &&
           <Form.Input 
             style={{marginBottom: 16}} 
             type="file" 

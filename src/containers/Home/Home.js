@@ -3,7 +3,7 @@ import { API } from "aws-amplify";
 import { Header, Icon, Button } from "semantic-ui-react";
 
 import "./Home.css";
-import WineList from "../../components/WineList/WineList";
+import PostList from "../../components/PostList/PostList.js";
 
 export default class Home extends Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class Home extends Component {
 
     this.state = {
       isLoading: true,
-      wines: []
+      posts: []
     };
   }
 
@@ -21,8 +21,8 @@ export default class Home extends Component {
     }
   
     try {
-      const wines = await this.getWines();
-      this.setState({ wines });
+      const posts = await this.getPosts();
+      this.setState({ posts });
     } catch (e) {
       alert(e);
     }
@@ -30,12 +30,12 @@ export default class Home extends Component {
     this.setState({ isLoading: false });
   }
   
-  getWines() {
+  getPosts() {
     return API.get("bubbler", "/feed");
   }  
 
-  renderWineList(wines) {
-    return <WineList items={wines} />
+  renderPostList(posts) {
+    return <PostList items={posts} />
   }  
 
   renderLander() {
@@ -47,16 +47,16 @@ export default class Home extends Component {
     );
   }
 
-  renderWines() {
+  renderPosts() {
     return (
-      <div className="wines">
+      <div className="posts">
         <Header as='h1'><center>Shared Bubbles</center></Header>
         <center>
-          <Button primary href="/wines/new" style={{ marginBottom: 16, width: this.props.mobile ? '100%' : '50%', backgroundColor: 'green' }}>
+          <Button primary href="/posts/new" style={{ marginBottom: 16, width: this.props.mobile ? '100%' : '50%', backgroundColor: 'green' }}>
             <Icon name='add'/> Add more bubbles
           </Button>
         </center>
-        {!this.state.isLoading && this.renderWineList(this.state.wines)}
+        {!this.state.isLoading && this.renderPostList(this.state.posts)}
       </div>
     );
   }
@@ -64,7 +64,7 @@ export default class Home extends Component {
   render() {
     return (
       <div className="Home">
-        {this.props.isAuthenticated ? this.renderWines() : this.renderLander()}
+        {this.props.isAuthenticated ? this.renderPosts() : this.renderLander()}
       </div>
     );
   }
