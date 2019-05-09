@@ -2,17 +2,17 @@ import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { success, failure } from "./libs/response-lib";
 
 /**
- * This makes a DynamoDB delete call with the userId & wineId key to delete the wine.
+ * This makes a DynamoDB delete call with the userId & postId key to delete the post.
  */
 export async function main(event, context) {
   const params = {
     TableName: process.env.tableName,
     // 'Key' defines the partition key and sort key of the item to be removed
     // - 'userId': Identity Pool identity id of the authenticated user
-    // - 'wineId': path parameter
+    // - 'postId': path parameter
     Key: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      wineId: event.pathParameters.id
+      postId: event.pathParameters.id
     }
   };
 

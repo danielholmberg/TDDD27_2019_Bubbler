@@ -12,12 +12,14 @@ export async function main(event, context) {
     TableName: process.env.tableName,
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      wineId: uuid.v1(),
+      postId: uuid.v1(),
+      productId: data.productId,
       label: data.label,
       image: data.image,
-      addedAt: Date.now(),
       comment: data.comment,
-      rating: data.rating
+      rating: data.rating,
+      addedAt: Date.now(),
+      updatedAt: null,
     }
   };
 

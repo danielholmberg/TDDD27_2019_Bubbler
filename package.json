@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A web application which provides a social platform for sparkling wine consumption",
   "main": "handler.js",
+  "private": true,
   "scripts": {
     "test": "jest"
   },
@@ -29,6 +30,7 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "source-map-support": "^0.4.18",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "xml2js": "^0.4.19"
   }
 }

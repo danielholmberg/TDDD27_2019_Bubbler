@@ -1,17 +1,17 @@
 Resources:
-  WinesTable:
+  PostsTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: ${self:custom.tableName}
       KeySchema:
         - AttributeName: userId
           KeyType: HASH
-        - AttributeName: wineId
+        - AttributeName: postId
           KeyType: RANGE
       AttributeDefinitions:
         - AttributeName: userId
           AttributeType: S
-        - AttributeName: wineId
+        - AttributeName: postId
           AttributeType: S
       # Set the capacity based on the stage
       ProvisionedThroughput:
