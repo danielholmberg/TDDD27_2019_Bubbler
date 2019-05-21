@@ -25,17 +25,20 @@ function querystring(name, url = window.location.href) {
  * the component that is passed in. And in the case where the user is authenticated, 
  * we use the Redirect component to simply send the user to the homepage.
  */
-export default ({ component: C, props: cProps, ...rest }) => {
+const UnauthenticatedRoute = ({ component: Component, props, ...rest }) => {
+  console.log('UnauthRoute:', props)
   const redirect = querystring("redirect");
   return (
     <Route
       {...rest}
-      render={props =>
-        !cProps.isAuthenticated
-          ? <C {...props} {...cProps} />
+      render={() =>
+        !props.auth.isAuthenticated
+          ? <Component/>
           : <Redirect
               to={redirect === "" || redirect === null ? "/" : redirect}
             />}
     />
   );
-};
+}
+
+export default UnauthenticatedRoute;

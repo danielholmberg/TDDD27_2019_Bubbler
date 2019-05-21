@@ -1,17 +1,18 @@
-import { Auth } from "aws-amplify";
 import React, { Component } from "react";
 import { Grid, Form, Segment, Header, Button, Message } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 import "./Login.css";
+import { signInUser } from "../../store/actions/authActions.js";
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
     // It’s important that we give the user some feedback while we are logging them in. 
     // So they get the sense that the app is still working, as opposed to being unresponsive.
     // To do this we are adding an isLoading flag to the state, which we will use to update
-    // the state of the LoaderButton component. 
+    // the loading state of the form component. 
     this.state = {
       isLoading: false,
       email: "",
@@ -42,12 +43,12 @@ export default class Login extends Component {
     this.setState({ isLoading: true });
   
     try {
-      await Auth.signIn(this.state.email, this.state.password);
-      this.props.userHasAuthenticated(true);
+      await this.props.signInUser(this.state.email, this.state.password);
     } catch (e) {
       alert(e.message);
-      this.setState({ isLoading: false });
     }
+
+    this.setState({ isLoading: false });
   }
 
   render() {
@@ -96,3 +97,11 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signInUser: (email, password) => dispatch(signInUser(email, password))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Login);

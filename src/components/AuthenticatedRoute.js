@@ -10,13 +10,20 @@ import { Route, Redirect } from "react-router-dom";
  * login page (redirect in the querystring) which we can use to redirect the user back 
  * after the user logs in.
  */
-export default ({ component: C, props: cProps, ...rest }) =>
-  <Route
-    {...rest}
-    render={props =>
-      cProps.isAuthenticated
-        ? <C {...props} {...cProps} />
-        : <Redirect
-            to={`/login?redirect=${props.location.pathname}${props.location.search}`}
-          />}
-  />;
+const AuthenticatedRoute = ({ component: Component, props, ...rest }) => {
+  console.log('AuthRoute:', props);
+  return (
+    <Route
+      {...rest}
+      render={() => 
+        props.auth.isAuthenticated 
+          ? <Component /> 
+          : <Redirect 
+              to={`/login?redirect=${props.location.pathname}${props.location.search}`} 
+            />
+      }
+    />
+  );
+}
+
+export default AuthenticatedRoute;

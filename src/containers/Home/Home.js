@@ -1,38 +1,18 @@
 import React, { Component } from "react";
-import { API } from "aws-amplify";
-import { Header, Icon, Button } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Header, Icon, Button, Message } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 import "./Home.css";
 import PostList from "../../components/PostList/PostList.js";
 
-export default class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isLoading: true,
-      posts: []
-    };
-  }
+class Home extends Component {
 
   async componentDidMount() {
     if (!this.props.isAuthenticated) {
       return;
     }
-  
-    try {
-      const posts = await this.getPosts();
-      this.setState({ posts });
-    } catch (e) {
-      alert(e);
-    }
-  
-    this.setState({ isLoading: false });
   }
-  
-  getPosts() {
-    return API.get("bubbler", "/feed");
-  }  
 
   renderPostList(posts) {
     return <PostList items={posts} />
@@ -48,15 +28,26 @@ export default class Home extends Component {
   }
 
   renderPosts() {
+    const { posts, mobile } = this.props;
+    const EMPTY_LIST_TEXT = 'Be the FIRST to add them bubbles!';
+
     return (
       <div className="posts">
-        <Header as='h1'><center>Shared Bubbles</center></Header>
+        <Header as='h1'><center>All Bubbles</center></Header>
         <center>
-          <Button primary href="/posts/new" style={{ marginBottom: 16, width: this.props.mobile ? '100%' : '50%', backgroundColor: 'green' }}>
-            <Icon name='add'/> Add more bubbles
-          </Button>
+          <Link to="/posts/new" >
+            <Button primary
+              style={{ 
+                marginBottom: 16, 
+                width: mobile ? '100%' : '50%', 
+                backgroundColor: 'green' 
+              }}
+            >
+              <Icon name='add'/> Add more bubbles
+            </Button>
+          </Link>
         </center>
-        {!this.state.isLoading && this.renderPostList(this.state.posts)}
+        {posts.length !== 0 ? this.renderPostList(posts) : <center><Message compact info>{EMPTY_LIST_TEXT}</Message></center>}
       </div>
     );
   }
@@ -69,3 +60,13 @@ export default class Home extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  console.log('Home state:', state);
+  return {
+    posts: state.posts.posts,
+    isAuthenticated: state.auth.isAuthenticated,
+  }
+}
+
+export default connect(mapStateToProps)(Home);

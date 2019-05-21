@@ -2,3 +2,7 @@
   --primary-color: #57B4D5;
   --secondary-color: #FCF0AD;
 }
+
+.Link {
+  text-decoration: 'none';
+}

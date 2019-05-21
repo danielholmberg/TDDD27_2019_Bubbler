@@ -1,6 +1,7 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import Loadable from "react-loadable";
+import { connect } from "react-redux";
 
 // Components
 import AppliedRoute from "./components/AppliedRoute.js";
@@ -9,8 +10,10 @@ import UnauthenticatedRoute from "./components/UnauthenticatedRoute.js";
 
 const MyLoadingComponent = ({ error, timedOut, retry, pastDelay }) => {
   if (error) {
+    console.log(error);
     return <div>Sorry, there was a problem loading the page.</div>;
   } else if (timedOut) {
+    console.log(timedOut);
     return (
       <div>
         Taking a long time... <button onClick={retry}>Retry</button>
@@ -78,46 +81,54 @@ const AsyncProfile = Loadable({
  * with an id of new. To ensure that doesn’t happen, we put our /posts/new route before
  * the pattern matching one.
  */
-export default ({ childProps }) => (
+const Routes = (props) => (
   <Switch>
     <AppliedRoute 
       path="/" 
       exact 
-      component={AsyncHome} 
-      props={childProps} 
+      component={AsyncHome}
     />
     <UnauthenticatedRoute
       path="/login"
       exact
       component={AsyncLogin}
-      props={childProps}
+      props={props}
     />
     <UnauthenticatedRoute
       path="/signup"
       exact
       component={AsyncSignup}
-      props={childProps}
+      props={props}
     />
     <AuthenticatedRoute
       path="/posts/new"
       exact
       component={AsyncNewPost}
-      props={childProps}
+      props={props}
     />
     <AuthenticatedRoute
       path="/posts/:id"
       exact
       component={AsyncPost}
-      props={childProps}
+      props={props}
     />
     <AuthenticatedRoute
       path="/profile"
       exact
       component={AsyncProfile}
-      props={childProps}
+      props={props}
     />
 
     {/* Finally, catch all unmatched routes */}
     <Route component={AsyncNotFound404} />
   </Switch>
 );
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    ...state,
+    ...ownProps
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(Routes));

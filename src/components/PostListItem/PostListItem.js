@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Storage } from 'aws-amplify';
+import { Link } from "react-router-dom";
 import { Card, Rating, Image } from 'semantic-ui-react'
 
 import "./PostListItem.css";
@@ -27,13 +28,11 @@ export default class PostListItem extends Component {
     }
   }
 
-  handleRate
-
   render() {
     const post = this.props.item;
     const { postId, image, label, comment, rating, addedAt, updatedAt } = post;
     return (
-      <Card raised key={postId} href={`/posts/${postId}`}>
+      <Card raised key={postId} as={Link} to={`/posts/${postId}`}>
         {image && 
         <Image
         centered

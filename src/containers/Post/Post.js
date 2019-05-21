@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import { API, Storage } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { Form, Segment, Rating, Divider } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import config from "../../config.js";
 import "./Post.css";
 import { s3Upload } from "../../libs/awsLib.js";
+import { updatePost, deletePost } from "../../store/actions/postActions.js";
 
 /**
  * Load the post on componentDidMount and save it to the state. We get the id of our post 
@@ -16,21 +19,20 @@ import { s3Upload } from "../../libs/awsLib.js";
  * The reason why we have the post object in the state along with the label and the 
  * imageURL is because we use this when the user edits the post.
  */
-export default class Post extends Component {
+class Post extends Component {
   constructor(props) {
     super(props);
 
     this.file = null;
+    this.imageURL = null;
 
     this.state = {
-      isLoading: null,
+      isLoading: false,
       isDeleting: null,
-      systembolagetData: [],
+      productId: null,
       label: "",
       comment: null,
       rating: 0,
-      post: null,
-      imageURL: null
     };
     
   }
@@ -40,36 +42,29 @@ export default class Post extends Component {
       return;
     } 
 
+    this.setState({ isLoading: true });
+
     try {
-      let imageURL;
-      const post = await this.getPost();
-      const { image, label, comment, rating } = post;
+      const post = this.props.post;
+      console.log('POST', post)
+      const { productId, image, label, comment, rating } = post;
 
       if (image) {
-        imageURL = await Storage.get(image);
+        this.imageURL = await Storage.get(image);
       }
 
-      const systembolagetData = await this.getSystembolagetData();
-
       this.setState({
-        systembolagetData,
+        productId,
         label,
         comment,
-        rating,
-        post,
-        imageURL
-      });
+        rating
+      })
+
     } catch (e) {
       alert(e);
     }
-  }
 
-  getSystembolagetData() {
-    return API.get("bubbler", "/systembolaget");
-  }
-
-  getPost() {
-    return API.get("bubbler", `/posts/${this.props.match.params.id}`);
+    this.setState({ isLoading: false });
   }
   
   validateForm() {
@@ -122,12 +117,15 @@ export default class Post extends Component {
   
       // As of now, we are not deleting the old image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
-      await this.savePost({
-        image: image || this.state.post.image,
+      const updatedPost = {
+        ...this.props.post,
+        productId: this.state.productId,
+        image: image || this.props.post.image,
         label: this.state.label,
         comment: this.state.comment,
         rating: this.state.rating
-      });
+      };
+      await this.props.updatePost(updatedPost);
       this.props.history.push("/");
     } catch (e) {
       alert(e);
@@ -142,16 +140,6 @@ export default class Post extends Component {
       alert(e);
       throw(e);
     }
-  }
-
-  savePost(post) {
-    return API.put("bubbler", `/posts/${this.props.match.params.id}`, {
-      body: post
-    });
-  }
-  
-  deletePost() {
-    return API.del("bubbler", `/posts/${this.props.match.params.id}`);
   }
   
   handleDelete = async event => {
@@ -170,7 +158,7 @@ export default class Post extends Component {
     try {
       // As of now, we are not deleting the image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
-      await this.deletePost();
+      await this.props.deletePost(this.props.post.postId);
       this.props.history.push("/");
     } catch (e) {
       alert(e);
@@ -213,8 +201,9 @@ export default class Post extends Component {
    * the browser’s confirm dialog.
    */
   render() {
-    const { isLoading, systembolagetData, label, post, imageURL } = this.state;
-
+    const { isLoading, comment, rating } = this.state;
+    const { post, systembolagetData } = this.props;
+    
     return (
       <div>
       {post &&
@@ -225,35 +214,33 @@ export default class Post extends Component {
           style={{marginBottom: 16}}
           labelKey={(item) => `${item.name}${item.name2 === '' ? '' : ' (' + item.name2 + ')'}`}
           options={systembolagetData}
-          defaultInputValue={label}
+          defaultInputValue={post.label}
           renderMenuItemChildren={this.renderMenuItemChildren}
           onChange={this.handleChange}
           placeholder="Choose your bubbles..."
         />
         <label>Comment</label>
-        <Form.TextArea placeholder='Write a comment...' value={this.state.comment || ""} onChange={this.handleCommentChange}/>
+        <Form.TextArea placeholder='Write a comment...' value={comment || ""} onChange={this.handleCommentChange}/>
         <label>Image</label>
-        {post.image && 
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={imageURL}
-          >
-            {' '+this.formatFilename(post.image)}
-          </a>
-        }
-        {!post.image &&
-          <Form.Input 
-            style={{marginBottom: 16}} 
-            type="file" 
-            accept={config.ACCEPTED_FILE_FORMATS} 
-            onChange={this.handleFileChange}/>
+        {post.image 
+          ? (<a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={this.imageURL}
+            >
+              {' '+this.formatFilename(post.image)}
+            </a>)
+          : (<Form.Input 
+              style={{marginBottom: 16}} 
+              type="file" 
+              accept={config.ACCEPTED_FILE_FORMATS} 
+              onChange={this.handleFileChange}/>)
         }
         <center>
           <Segment style={{marginBottom: 16, marginTop: 8}}>
             <center>
-              <Rating icon='star' size='huge' rating={this.state.rating} onRate={this.handleRate} maxRating={10}/>
-              <p> {this.state.rating}/10</p>
+              <Rating icon='star' size='huge' rating={rating} onRate={this.handleRate} maxRating={10}/>
+              <p> {rating}/10</p>
             </center>
           </Segment> 
           <Form.Button style={{width: '50%'}} color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Save</Form.Button>
@@ -265,3 +252,26 @@ export default class Post extends Component {
     );
   }  
 }
+
+const mapStateToProps = (state, ownProps) => {
+  console.log('Post.js - state', state);
+  console.log('Post.js - ownProps', ownProps);
+  const id = ownProps.match.params.id;
+  const post = state.posts.posts.find((post) => post.postId === id);
+
+  return {
+    post: post,
+    isAuthenticated: state.auth.isAuthenticated,
+    systembolagetData: state.base.systembolagetData,
+    history: ownProps.history,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updatePost: (post) => dispatch(updatePost(post)),
+    deletePost: (postId) => dispatch(deletePost(postId)),
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Post));

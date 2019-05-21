@@ -8,5 +8,7 @@ import { Route } from "react-router-dom";
  * The props variable in this case is what the Route component passes us. 
  * Whereas, the cProps is the childProps that we want to set.
  */
-export default ({ component: C, props: cProps, ...rest }) =>
-  <Route {...rest} render={props => <C {...props} {...cProps} />} />;
+const AppliedRoute = ({ component: Component, ...rest }) =>
+  <Route {...rest} render={() => <Component/>} />;
+
+export default AppliedRoute;

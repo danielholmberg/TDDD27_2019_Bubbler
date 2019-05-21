@@ -1,44 +1,16 @@
 import React, { Component } from "react";
-import { API, Auth } from "aws-amplify";
 import { Segment, Header } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 import PostList from "../../components/PostList/PostList.js";
 import "./Profile.css";
 
-export default class Profile extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isLoading: true,
-      posts: [],
-      user: null
-    };
-  }
+class Profile extends Component {
 
   async componentDidMount() {
     if (!this.props.isAuthenticated) {
       return;
     }
-
-    try {
-      const posts = await this.getPosts();
-      const user = await Auth.currentAuthenticatedUser()
-      .then(user => user)
-      .catch(e => {
-        alert(e);
-        this.props.history.push("/login");
-      });
-      this.setState({ posts, user });
-    } catch (e) {
-      alert(e);
-    }
-
-    this.setState({ isLoading: false });
-  }
-
-  getPosts() {
-    return API.get("bubbler", "/posts");
   }
 
   renderPostList(posts) {
@@ -46,15 +18,17 @@ export default class Profile extends Component {
   }
 
   renderHeaderSection() {
-    const { user } = this.state;
+    const { posts, user } = this.props;
+    const EMPTY_LIST_TEXT = 'No ratings added yet!';
+
     return (
       <div className="header">
         <Segment>
           <Header as='h1'><center>Profile</center></Header>
           <center>{user && user.attributes.email}</center>
         </Segment>
-        <Header as='h2'><center>Your Cellar</center></Header>
-        {this.renderPostList(this.state.posts)}
+        <Header as='h2'><center>Your rated bubbles</center></Header>
+        {posts.length !== 0 ? this.renderPostList(posts) : <center style={{color:'grey'}}>{EMPTY_LIST_TEXT}</center>}
       </div>
     );
   }
@@ -69,3 +43,19 @@ export default class Profile extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  console.log('Profile state:', state);
+  console.log('Profile ownProps:', ownProps);
+  const user = state.auth.user;
+  const userPosts = state.posts.posts.filter((post) => post.userId === user.id);
+
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    user: user,
+    posts: userPosts,
+    history: ownProps.history,
+  }
+}
+
+export default connect(mapStateToProps)(Profile);

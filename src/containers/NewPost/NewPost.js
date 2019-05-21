@@ -1,21 +1,22 @@
 import React, { Component } from "react";
-import { API } from "aws-amplify";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { Form, Rating, Segment, Divider } from "semantic-ui-react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 import config from "../../config.js";
 import "./NewPost.css";
 import { s3Upload } from "../../libs/awsLib.js";
+import { createPost } from "../../store/actions/postActions.js";
 
-export default class NewPost extends Component {
+class NewPost extends Component {
   constructor(props) {
     super(props);
 
     this.file = null;
 
     this.state = {
-      isLoading: null,
-      systembolagetData: [],
+      isLoading: false,
       productId: null,
       label: "",
       comment: null,
@@ -27,17 +28,6 @@ export default class NewPost extends Component {
     if(!this.props.isAuthenticated) {
       return;
     } 
-
-    try {
-      const systembolagetData = await this.getSystembolagetData();
-      this.setState({ systembolagetData });
-    } catch(e) {
-      alert(e);
-    }
-  }
-
-  getSystembolagetData() {
-    return API.get("bubbler", "/systembolaget");
   }
 
   validateForm() {
@@ -84,13 +74,15 @@ export default class NewPost extends Component {
         ? await this.fileUpload(this.file)
         : null;
   
-      await this.createPost({
+      const newPost = {
         productId: this.state.productId,
-        image,
+        image: image,
         label: this.state.label,
         comment: this.state.comment,
-        rating: this.state.rating
-      });
+        rating: this.state.rating,
+      };
+
+      await this.props.createPost(newPost);
       this.props.history.push("/");
     } catch (e) {
       alert(e);
@@ -106,12 +98,6 @@ export default class NewPost extends Component {
       throw(e);
     }
   }
-  
-  createPost(post) {
-    return API.post("bubbler", "/posts", {
-      body: post
-    });
-  }  
 
   renderMenuItemChildren = (item, index) => {
     return [
@@ -142,14 +128,17 @@ export default class NewPost extends Component {
    * component.
    */
   render() {
+    const { isLoading, rating } = this.state;
+    const { systembolagetData } = this.props;
+
     return (
-      <Form style={{marginBottom: 16}} loading={this.state.isLoading}>
+      <Form style={{marginBottom: 16}} loading={isLoading}>
         <label>Label</label>
         <Typeahead
           clearButton
           style={{marginBottom: 16}}
           labelKey={(item) => `${item.name}${item.name2 === '' ? '' : ' (' + item.name2 + ')'}`}
-          options={this.state.systembolagetData}
+          options={systembolagetData}
           renderMenuItemChildren={this.renderMenuItemChildren}
           onChange={this.handleChange}
           placeholder="Choose your bubbles..."
@@ -161,8 +150,8 @@ export default class NewPost extends Component {
         <center>
           <Segment style={{marginBottom: 16}}>
             <center>
-              <Rating icon='star' size='huge' rating={this.state.rating} onRate={this.handleRate} maxRating={10}/>
-              <p> {this.state.rating}/10</p>
+              <Rating icon='star' size='huge' rating={rating} onRate={this.handleRate} maxRating={10}/>
+              <p> {rating}/10</p>
             </center>
           </Segment>
           <Form.Button style={{width: '50%'}} color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Add</Form.Button> 
@@ -171,3 +160,20 @@ export default class NewPost extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  console.log('NewPost state:', state);
+  console.log('NewPost ownProps:', ownProps);
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    systembolagetData: state.base.systembolagetData,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createPost: (post) => dispatch(createPost(post)),
+  } 
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewPost));

@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { Grid, Form, Segment, Header, Button, Message } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 import "./Signup.css";
-import { Auth } from "aws-amplify";
+import { 
+  signUpNewUser, 
+  confirmSignUp, 
+  signInUser 
+} from "../../store/actions/authActions.js";
 
 /**
  *  - Since we need to show the user a form to enter the confirmation code, we are conditionally 
@@ -12,17 +17,17 @@ import { Auth } from "aws-amplify";
  *  - We are setting the autoFocus flags on the email and the confirmation code fields.
  */
 
-export default class Signup extends Component {
+class Signup extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isLoading: false,
+      confirmSignUp: false,
       email: "",
       password: "",
       confirmPassword: "",
       confirmationCode: "",
-      newUser: null
     };
   }
 
@@ -62,28 +67,19 @@ export default class Signup extends Component {
     });
   }
 
-  /**
-   * Make a call to signup a user. This creates a new user object.
-   * Save that user object to the state as newUser.
-   */
   handleSubmit = async event => {
     event.preventDefault();
   
     this.setState({ isLoading: true });
   
     try {
-      const newUser = await Auth.signUp({
+      await this.props.signUpNewUser({
         username: this.state.email,
         password: this.state.password
       });
-      this.setState({
-        newUser
-      });
+      this.setState({ confirmSignUp: true });
     } catch (e) {
-      if(e === 'UsernameExistsException') {
-        Auth.resendSignUp();
-      }
-      alert(e.message);
+      alert(e);
     }
   
     this.setState({ isLoading: false });
@@ -93,7 +89,6 @@ export default class Signup extends Component {
    * Use the confirmation code to confirm the user. With the user now confirmed, 
    * Cognito now knows that we have a new user that can login to our app. Use the 
    * email and password to authenticate exactly the same way we did in the login page.
-   * Update the App’s state using the userHasAuthenticated method. 
    * Finally, redirect to the homepage.
    */
   handleConfirmationSubmit = async event => {
@@ -102,11 +97,8 @@ export default class Signup extends Component {
     this.setState({ isLoading: true });
   
     try {
-      await Auth.confirmSignUp(this.state.email, this.state.confirmationCode);
-      await Auth.signIn(this.state.email, this.state.password);
-  
-      this.props.userHasAuthenticated(true);
-      this.props.history.push("/");
+      await this.props.confirmSignUp(this.state.email, this.state.confirmationCode);
+      await this.props.signInUser(this.state.email, this.state.password);
     } catch (e) {
       alert(e.message);
       this.setState({ isLoading: false });
@@ -196,12 +188,23 @@ export default class Signup extends Component {
   }
 
   render() {
+    console.log(this.state.confirmSignUp)
     return (
       <div className="Signup">
-        {this.state.newUser === null
+        {!this.state.confirmSignUp
           ? this.renderForm()
           : this.renderConfirmationForm()}
       </div>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signUpNewUser: ({ username, password }) => dispatch(signUpNewUser(username, password)),
+    confirmSignUp: (email, confirmationCode) => dispatch(confirmSignUp(email, confirmationCode)),
+    signInUser: (email, password) => dispatch(signInUser(email, password))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Signup);
