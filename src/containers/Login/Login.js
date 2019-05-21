@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Grid, Form, Segment, Header, Button, Message } from "semantic-ui-react";
 import { connect } from "react-redux";
 
@@ -89,7 +90,7 @@ class Login extends Component {
               </Segment>
             </Form>
             <Message>
-              New to us? <a href='/signup'>Sign up</a>
+              New to us? <Link to='/signup'>Sign up</Link>
             </Message>
           </Grid.Column>
         </Grid>
