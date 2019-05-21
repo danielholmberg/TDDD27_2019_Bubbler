@@ -24,6 +24,12 @@ class App extends Component {
     }
   }
 
+  async componentDidUpdate() {
+    if(this.props.isAuthenticated) {
+      await this.props.getFeedHistory();
+    }
+  }
+
   async componentDidMount() {
     console.log('App componentDidMount()')
     window.addEventListener('resize', () => this.props.windowResize());
@@ -31,7 +37,6 @@ class App extends Component {
       await this.props.getCurrentUserSession();
       await this.props.getCurrentUser();
       await this.props.getSystembolagetData();
-      await this.props.getFeedHistory();
     } catch (e) {
       if (e !== "No current user") {
         alert(e);
