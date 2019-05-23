@@ -1,0 +1,12 @@
+Resources:
+  ConnectionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.connectionsTableName}
+      AttributeDefinitions:
+        - AttributeName: "connectionId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "connectionId"
+          KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST  # Because we don't know the throughput capacity that we need.

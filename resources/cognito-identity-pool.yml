@@ -71,7 +71,7 @@ Resources:
                       - Ref: ApiGatewayRestApi
                       - '/*'
               
-              # Allow users to upload images to their
+              # Allow users to upload images to the public
               # folder inside our S3 bucket
               - Effect: 'Allow'
                 Action:
@@ -81,7 +81,7 @@ Resources:
                     - ''
                     -
                       - Fn::GetAtt: [ImagesBucket, Arn]
-                      - '/private/'
+                      - '/public/'
                       - '$'
                       - '{cognito-identity.amazonaws.com:sub}/*'
   

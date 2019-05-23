@@ -2,19 +2,21 @@
   "name": "bubbler",
   "version": "1.0.0",
   "description": "A web application which provides a social platform for sparkling wine consumption",
-  "main": "handler.js",
-  "private": true,
-  "scripts": {
-    "test": "jest"
+  "main": "connectionHandler.js",
+  "directories": {
+    "test": "tests"
   },
-  "author": "Daniel Holmberg",
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.liu.se:danho525/tddd27_project_bubbler.git"
+  "dependencies": {
+    "ajv": "^6.10.0",
+    "aws-sdk": "^2.455.0",
+    "babel-runtime": "^6.26.0",
+    "bluebird": "^3.5.4",
+    "serverless": "^1.42.3",
+    "source-map-support": "^0.4.18",
+    "uuid": "^3.3.2",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "ajv": "^6.10.0",
-    "aws-sdk": "^2.437.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-source-map-support": "^1.0.0",
@@ -27,10 +29,13 @@
     "webpack": "^4.16.2",
     "webpack-node-externals": "^1.6.0"
   },
-  "dependencies": {
-    "babel-runtime": "^6.26.0",
-    "source-map-support": "^0.4.18",
-    "uuid": "^3.3.2",
-    "xml2js": "^0.4.19"
-  }
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.liu.se:danho525/tddd27_project_bubbler.git"
+  },
+  "author": "Daniel Holmberg",
+  "license": "ISC"
 }

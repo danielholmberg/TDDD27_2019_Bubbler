@@ -13,7 +13,7 @@ export async function main(event, context) {
     // - 'postId': path parameter
     Key: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      postId: event.pathParameters.id
+      postId: data.postId
     },
     // 'UpdateExpression' defines the attributes to be updated
     // 'ExpressionAttributeValues' defines the value in the update expression
