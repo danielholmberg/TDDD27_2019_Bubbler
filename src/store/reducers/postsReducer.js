@@ -2,6 +2,7 @@ import { PostActionTypes } from "../actions/postActions";
 
 const initState = {
   posts: [],
+  hasFeedHistory: false,
 }
 
 const postReducer = (state = initState, action) => {
@@ -22,10 +23,9 @@ const postReducer = (state = initState, action) => {
     // DELETE
     case PostActionTypes.DELETE_POST:
       console.log(PostActionTypes.DELETE_POST, action.id);
-      const posts = state.posts.filter((post) => post.postId !== action.id);
       return {
         ...state,
-        posts: posts
+        posts: state.posts.filter((post) => post.postId !== action.id)
       }
 
     case PostActionTypes.DELETE_POST_ERROR:
@@ -49,11 +49,36 @@ const postReducer = (state = initState, action) => {
       console.log(PostActionTypes.GET_FEED_HISTORY);
       return {
         ...state,
-        posts: action.posts
+        posts: action.posts,
+        hasFeedHistory: true
       }
 
     case PostActionTypes.GET_FEED_HISTORY_ERROR:
       console.log('Get feed history error', action.error);
+      return state;
+
+    // ADD NEW POST
+    case PostActionTypes.ADD_NEW_POST:
+      console.log(PostActionTypes.ADD_NEW_POST);
+      return {
+        ...state,
+        posts: [...state.posts, action.post]
+      }
+
+    case PostActionTypes.ADD_NEW_POST_ERROR:
+      console.log('Add new post error', action.error);
+      return state;
+
+    // ADD NEW POST
+    case PostActionTypes.REMOVE_POST:
+      console.log(PostActionTypes.REMOVE_POST, action.id);
+      return {
+        ...state,
+        posts: state.posts.filter((post) => post.postId !== action.id)
+      }
+
+    case PostActionTypes.REMOVE_POST_ERROR:
+      console.log('Remove post error', action.error);
       return state;
   
     // DEFAULT

@@ -2,7 +2,8 @@ import { BaseActionTypes } from "../actions/baseActions";
 
 const initState = {
   mobile: window.innerWidth <= 500,
-  systembolagetData: []
+  systembolagetData: [],
+  wss: null
 }
 
 const baseReducer = (state = initState, action) => {
@@ -26,6 +27,13 @@ const baseReducer = (state = initState, action) => {
       console.log('Get systembolaget data error', action.error);
       return state;
       
+    case BaseActionTypes.SET_WSS_CLIENT:
+      console.log(BaseActionTypes.SET_WSS_CLIENT);
+      return {
+        ...state,
+        wss: action.wss
+      }
+
     default:
       return state;
   }

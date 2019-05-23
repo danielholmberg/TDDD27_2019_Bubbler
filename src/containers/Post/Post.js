@@ -158,7 +158,7 @@ class Post extends Component {
     try {
       // As of now, we are not deleting the image when we upload a new one. Could be 
       // changed pretty straightforward by looking at the AWS Amplify API Docs.
-      await this.props.deletePost(this.props.post.postId);
+      await this.props.deletePost(this.props.post);
       this.props.history.push("/");
     } catch (e) {
       alert(e);
@@ -239,8 +239,8 @@ class Post extends Component {
         <center>
           <Segment style={{marginBottom: 16, marginTop: 8}}>
             <center>
-              <Rating icon='star' size='huge' rating={rating} onRate={this.handleRate} maxRating={10}/>
-              <p> {rating}/10</p>
+              <Rating icon='star' size='massive' rating={rating} onRate={this.handleRate} maxRating={5}/>
+              <p> {rating} out of 5</p>
             </center>
           </Segment> 
           <Form.Button style={{width: '50%'}} color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Save</Form.Button>
@@ -270,7 +270,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     updatePost: (post) => dispatch(updatePost(post)),
-    deletePost: (postId) => dispatch(deletePost(postId)),
+    deletePost: (post) => dispatch(deletePost(post)),
   }
 }
 

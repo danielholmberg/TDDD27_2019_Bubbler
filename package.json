@@ -15,7 +15,8 @@
     "react-scripts": "2.1.8",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.86.0"
+    "semantic-ui-react": "^0.86.0",
+    "sockette": "^2.0.5"
   },
   "scripts": {
     "start": "react-scripts start",

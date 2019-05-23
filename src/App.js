@@ -2,17 +2,27 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Menu, Container, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
+import Sockette from "sockette";
 
 import Routes from "./Routes.js";
 import "./App.css";
+import config from "./config.js";
 import { 
   signInUser,
   signOutUser,
   getCurrentUserSession,
   getCurrentUser
 } from "./store/actions/authActions.js";
-import { getFeedHistory } from "./store/actions/postActions.js";
-import { windowResize, getSystembolagetData } from "./store/actions/baseActions";
+import { 
+  getFeedHistory, 
+  addNewPost,
+  removePost
+} from "./store/actions/postActions.js";
+import { 
+  windowResize, 
+  getSystembolagetData, 
+  setWSSClient 
+} from "./store/actions/baseActions";
 
 class App extends Component {
 
@@ -26,7 +36,39 @@ class App extends Component {
 
   async componentDidUpdate() {
     if(this.props.isAuthenticated) {
-      await this.props.getFeedHistory();
+      try {
+        if(!this.props.wss) {
+          const wss = new Sockette(config.prod.apiGateway.WSS, {
+            timeout: 5e3, // 5000
+            maxAttempts: 10,
+            onopen: e => console.log('Connected!', e),
+            onmessage: e => this.onWSSMessage(e),
+            onreconnect: e => console.log('Reconnecting...', e),
+            onmaximum: e => console.log('Stop Attempting!', e),
+            onclose: e => console.log('Closed!', e),
+            onerror: e => console.log('Error:', e)
+          });
+
+          this.props.setWSSClient(wss);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  onWSSMessage(e) {
+    console.log('OnMessage', e);
+    const data = JSON.parse(e.data)
+    switch(data.action) {
+      case 'add':
+        this.props.addNewPost(data.post);
+        break;
+      case 'delete':
+        this.props.removePost(data.id);
+        break;
+      default:
+        console.warn('Unhandled WSS onMessage event...', data);
     }
   }
 
@@ -47,6 +89,13 @@ class App extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', () => this.props.windowResize());
+    try {
+      if(this.props.wss) {
+        this.props.wss.close();
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -127,6 +176,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
     mobile: state.base.mobile,
+    wss: state.base.wss,
+    hasFeedHistory: state.posts.hasFeedHistory,
   }
 }
 
@@ -139,6 +190,9 @@ const mapDispatchToProps = (dispatch) => {
     getCurrentUser: () => dispatch(getCurrentUser()),
     getSystembolagetData: () => dispatch(getSystembolagetData()),
     getFeedHistory: () => dispatch(getFeedHistory()),
+    setWSSClient: (wss) => dispatch(setWSSClient(wss)),
+    addNewPost: (post) => dispatch(addNewPost(post)),
+    removePost: (id) => dispatch(removePost(id)),
   }
 }
 

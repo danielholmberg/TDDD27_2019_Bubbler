@@ -75,6 +75,7 @@ class NewPost extends Component {
         : null;
   
       const newPost = {
+        userId: this.props.user.id,
         productId: this.state.productId,
         image: image,
         label: this.state.label,
@@ -150,8 +151,8 @@ class NewPost extends Component {
         <center>
           <Segment style={{marginBottom: 16}}>
             <center>
-              <Rating icon='star' size='huge' rating={rating} onRate={this.handleRate} maxRating={10}/>
-              <p> {rating}/10</p>
+              <Rating icon='star' size='massive' rating={rating} onRate={this.handleRate} maxRating={5}/>
+              <p> {rating} out of 5</p>
             </center>
           </Segment>
           <Form.Button style={{width: '50%'}} color='blue' disabled={!this.validateForm()} onClick={this.handleSubmit}>Add</Form.Button> 
@@ -167,6 +168,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
     systembolagetData: state.base.systembolagetData,
+    user: state.auth.user,
   }
 }
 

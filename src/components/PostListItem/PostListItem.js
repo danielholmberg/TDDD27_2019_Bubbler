@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Storage } from 'aws-amplify';
-import { Link } from "react-router-dom";
-import { Card, Rating, Image } from 'semantic-ui-react'
+import { Link, withRouter } from "react-router-dom";
+import { Card, Rating, Image } from 'semantic-ui-react';
+import { connect } from "react-redux";
 
 import "./PostListItem.css";
 
-export default class PostListItem extends Component {
+class PostListItem extends Component {
   constructor(props) {
     super(props)
 
@@ -30,32 +31,40 @@ export default class PostListItem extends Component {
 
   render() {
     const post = this.props.item;
-    const { postId, image, label, comment, rating, addedAt, updatedAt } = post;
+    const user = this.props.user;
+    const { userId, postId, image, label, comment, rating, addedAt, updatedAt } = post;
     return (
-      <Card raised key={postId} as={Link} to={`/posts/${postId}`}>
-        {image && 
-        <Image
-        centered
-        style={{ maxWidth: 200, maxHeight: 200 }}
-        src={this.state.imageURL} 
-        alt={label}
-        />}
+      <Card raised key={postId} as={Link} to={userId === user.id ? `/posts/${postId}` : this.props.location.pathname}>
+        {image &&
+          <center>
+            <Image 
+              rounded 
+              style={{ margin: 10, maxWidth: 200, maxHeight: 200 }}
+              src={this.state.imageURL} 
+              alt={label}
+            />
+          </center>}
         <Card.Content>
           <Card.Header>{label}</Card.Header>
           <Card.Meta>
-            <small className='added'>Added: {new Date(addedAt).toLocaleString()}</small>
-            {updatedAt && 
-            <small className='updated'>Updated: {new Date(updatedAt).toLocaleString()}</small>} 
+            <Rating icon='star' style={{ paddingRight: 10, paddingTop: 10 }} rating={rating} maxRating={5} disabled />
+            {rating ? rating : 0}
           </Card.Meta>
           {comment && <Card.Description>{comment}</Card.Description>}
         </Card.Content>
         <Card.Content extra>
-          <center>
-            <Rating icon='star' rating={rating} maxRating={10} disabled/>
-            <p> {rating ? rating : 0}/10</p>
-          </center>
+          <small>Added: {new Date(addedAt).toLocaleString()}</small>
+          <small>{updatedAt && `Updated: ${new Date(updatedAt).toLocaleString()}`}</small>
         </Card.Content>
       </Card>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(PostListItem));
