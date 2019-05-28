@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Form, Segment, Header, Button, Message } from "semantic-ui-react";
+import { Grid, Form, Segment, Header, Button, Message, List } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import "./Signup.css";
@@ -26,7 +26,9 @@ class Signup extends Component {
       confirmSignUp: false,
       email: "",
       password: "",
+      pwError: true,
       confirmPassword: "",
+      pwConfirmError: false,
       confirmationCode: "",
     };
   }
@@ -35,7 +37,8 @@ class Signup extends Component {
     return (
       this.state.email.length > 0 &&
       this.state.password.length > 0 &&
-      this.state.password === this.state.confirmPassword
+      this.state.password === this.state.confirmPassword &&
+      !this.state.pwError && !this.state.pwConfirmError
     );
   }
 
@@ -50,15 +53,33 @@ class Signup extends Component {
   }
 
   handlePasswordChange = event => {
-    this.setState({
-      password: event.target.value
-    });
+    const pwFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    console.log('test',!pwFormat.exec(event.target.value))
+    if(!pwFormat.exec(event.target.value)) {
+      this.setState({
+        pwError: true
+      })
+    } else {
+      console.log('error false:', event.target.value)
+      this.setState({
+        password: event.target.value,
+        pwError: false
+      });
+    }
+
   }
   
   handleConfirmPasswordChange = event => {
-    this.setState({
-      confirmPassword: event.target.value
-    });
+    if(this.state.password !== event.target.value) {
+      this.setState({
+        pwConfirmError: true
+      })
+    } else {
+      this.setState({
+        confirmPassword: event.target.value,
+        pwConfirmError: false
+      });
+    }
   }
 
   handleConfirmationCodeChange = event => {
@@ -119,6 +140,8 @@ class Signup extends Component {
                 autoFocus 
                 fluid
                 type='tel'
+                value={this.state.confirmationCode}
+                placeholder='Confirmation code'
                 onChange={this.handleConfirmationCodeChange}
               />
               <Message>Please check your email for the confirmation code.</Message>
@@ -139,6 +162,14 @@ class Signup extends Component {
   }
 
   renderForm() {
+    const pwCriteria = [
+      'At least 8 characters',
+      'At least 1 number',
+      'At least 1 special character',
+      'At least 1 uppercase',
+      'At least 1 lowercase'
+    ]
+    
     return (
       <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
         <Grid.Column style={{ maxWidth: 450 }}>
@@ -161,8 +192,10 @@ class Signup extends Component {
                 iconPosition='left'
                 placeholder='Password'
                 type='password'
+                error={this.state.pwError}
                 onChange={this.handlePasswordChange}
               />
+              {this.state.pwError && <Message negative list={pwCriteria}/>}
               <Form.Input
                 fluid
                 icon='lock'
@@ -171,6 +204,7 @@ class Signup extends Component {
                 type='password'
                 onChange={this.handleConfirmPasswordChange}
               />
+              {this.state.pwConfirmError && <Message negative>Password does not match.</Message>}
               <Button 
                 color='blue' 
                 fluid 
@@ -188,7 +222,6 @@ class Signup extends Component {
   }
 
   render() {
-    console.log(this.state.confirmSignUp)
     return (
       <div className="Signup">
         {!this.state.confirmSignUp
