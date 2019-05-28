@@ -1,14 +1,9 @@
 import React, { Component } from "react";
-<<<<<<< HEAD
-import { Container, Segment, Header, Label, Icon, Image, Modal, Form, Button } from "semantic-ui-react";
-=======
 import { Container, Segment, Header, Label, Icon, Image } from "semantic-ui-react";
->>>>>>> 2ee04e2... Added Name attribute to user, and updated Post item design.
 import { connect } from "react-redux";
 
 import PostList from "../../components/PostList/PostList.js";
 import "./Profile.css";
-import { updateUserAttributes } from "../../store/actions/baseActions.js";
 
 class Profile extends Component {
 
@@ -49,11 +44,7 @@ class Profile extends Component {
   renderHeaderSection() {
     const { posts, user } = this.props;
     const EMPTY_LIST_TEXT = 'No ratings added yet!';
-<<<<<<< HEAD
-    const profilePic = null;
-=======
     const profilePic = null // TODO - Add posibility to change profile avatar
->>>>>>> 2ee04e2... Added Name attribute to user, and updated Post item design.
 
     return (
       <Container>
@@ -61,38 +52,6 @@ class Profile extends Component {
           <Header as='h2' icon dividing textAlign='center'>
             {profilePic ?  
               <Image circular src={profilePic} /> :
-<<<<<<< HEAD
-              <Icon name='user' circular /> 
-            }
-            <Header.Content>
-              {user && (user.attributes.nickname || user.attributes.email)}
-            </Header.Content>
-          </Header>
-          <Label style={{float: 'right'}} horizontal basic>
-            <Icon name='star' color='yellow' style={{height: '10px'}}/> <b>{posts.length}</b>
-          </Label>
-
-          <Icon name='edit' size='large' onClick={() => this.toggleModal()}/>
-          <Modal style={{position: 'relative'}}
-            closeOnDimmerClick={false}
-            open={this.state.modalOpen}>
-            <Modal.Header>
-              Edit profile
-            </Modal.Header>
-            <Modal.Content>
-            <Form>
-              <Form.Field onChange={() => console.log('name changed')}>
-                <label>Name</label>
-                <input placeholder='Name' />
-              </Form.Field>
-            </Form>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button negative icon='remove' content='Cancel' onClick={() => this.toggleModal()}/>
-              <Button positive disabled={!this.validateForm()} icon='save' content='Save' onClick={() => this.submitSettings()}/>
-            </Modal.Actions>
-          </Modal>
-=======
               <Image bordered circular src='https://react.semantic-ui.com/images/avatar/large/patrick.png' /> 
             }
             <Header.Content>
@@ -104,7 +63,6 @@ class Profile extends Component {
               <Icon name='star' color='yellow' style={{height: '10px'}}/> <b>{posts.length}</b>
             </Label>
           </Container>
->>>>>>> 2ee04e2... Added Name attribute to user, and updated Post item design.
         </Segment>
 
         <Header as='h2'><center>Your reviews</center></Header>
@@ -138,14 +96,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-<<<<<<< HEAD
-const mapDisptachToProps = (dispatch) => {
-  return {
-    updateUserAttributes: (attributes) => dispatch(updateUserAttributes(attributes))
-  }
-}
-
-export default connect(mapStateToProps, mapDisptachToProps)(Profile);
-=======
 export default connect(mapStateToProps)(Profile);
->>>>>>> 2ee04e2... Added Name attribute to user, and updated Post item design.
