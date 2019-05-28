@@ -80,8 +80,14 @@ export const getCurrentUserSession = () => {
 export const signUpNewUser = (username, password) => {
   return async (dispatch, getState) => {
     try {
-      await Auth.signUp({ username, password });
-
+      await Auth.signUp({ 
+        'username': username,
+        'password': password, 
+        'attributes': {
+          'name': username.split('@')[0],
+        } 
+      });
+      
       dispatch({
         type: AuthActionTypes.SIGN_UP_NEW_USER
       });

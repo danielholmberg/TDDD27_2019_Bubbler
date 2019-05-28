@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { Storage } from 'aws-amplify';
 import { Link, withRouter } from "react-router-dom";
-import { Card, Rating, Image, Modal, Icon, Header, Button, Segment, Item, Divider, Label } from 'semantic-ui-react';
+import { Card, Rating, Image, Modal, Icon, Header, Button, Segment, Item, Divider } from 'semantic-ui-react';
 import { connect } from "react-redux";
+import { Auth } from "aws-amplify";
+import AWS from "aws-sdk";
 
 import "./PostListItem.css";
+import config from "../../config.js";
 
 class PostListItem extends Component {
   constructor(props) {
@@ -12,6 +15,7 @@ class PostListItem extends Component {
 
     this.state = {
       imageURL: null,
+      postUser: null,
     }
   }
 
@@ -19,45 +23,98 @@ class PostListItem extends Component {
     return Storage.get(image);
   }
 
+  async getPostUser(userId) {
+
+    if(userId === this.props.user.username) {
+      return this.props.user
+    }
+
+    AWS.config.update({ region: config.prod.cognito.REGION });
+    AWS.config.update({ credentials: await Auth.currentCredentials() })
+
+    console.log('AWS.config:', AWS.config);
+
+    const params = {
+      UserPoolId: config.prod.cognito.USER_POOL_ID,
+      AttributesToGet: [ 'name' ],
+      Filter: `sub = \"${userId}\"`
+    }
+    console.log('params:', params)
+
+    const cognitoProvider = await new AWS.CognitoIdentityServiceProvider()
+
+    const data = await new Promise((resolve, reject) => {
+      cognitoProvider.listUsers(params, (err, data) => {
+        if (err) {
+          console.log('err:', err);
+          reject(err);
+        } else {
+          console.log('data:', data);
+          resolve(data);
+        }
+      });
+    });
+
+    const user = data.Users[0];
+    console.log('user:', user)
+    return user;
+  }
+  
+
   async componentDidMount() {
+    let imageURL, postUser;
+
     try {
-      const imageURL = await this.loadimage(this.props.item.image);
-      console.log("imageURL: ", imageURL);
-      this.setState({ imageURL });
+      imageURL = await this.loadimage(this.props.item.image);
+      postUser = await this.getPostUser(this.props.item.userId);
     } catch(e) {
-      alert(e);
+      if(e.toString().includes('InvalidParameterException')) {
+        postUser = null;
+      } else {
+        alert(e);
+      }
+    }
+
+    this.setState({ imageURL, postUser });
+}
+
+  componentWillUpdate(nextProps, nextState) {
+    console.log('willUpdate',nextProps)
+    if(nextProps.user.name !== this.props.user.name) {
+      this.props.user = nextState.auth.user;
     }
   }
 
   renderItem() {
+    const { postUser } = this.state;
     const post = this.props.item;
-    const { postId, image, label, comment, rating, addedAt, updatedAt } = post;
+    const { postId, productId, image, label, comment, rating, addedAt } = post;
 
     return (
       <Card style={{ overflowWrap: 'break-word' }} raised key={postId} >
         <Header style={{position: 'relative', margin: 0, padding: 10, backgroundColor: '#57B4D5', color: 'white'}} as='h4'>
-          <Image bordered circular src='https://react.semantic-ui.com/images/avatar/large/patrick.png' /> {this.props.user.attributes.email.split('@')[0]}
+          <Image bordered circular src='https://react.semantic-ui.com/images/avatar/large/patrick.png' /> 
+          {postUser !== null ? (this.state.postUser.Attributes ? this.state.postUser.Attributes[0].Value : this.state.postUser.attributes.name) : 'Anonymous'}
         </Header>
         <Card.Content>
           <Card.Header>{label}</Card.Header>
           <Card.Meta>
+            <small>Art.nr. {productId}</small> | <small>{new Date(addedAt).toLocaleString()}</small>
             <Rating icon='star' style={{ paddingRight: 10, paddingTop: 10 }} rating={rating} maxRating={5} disabled />
             {rating ? rating : 0}
           </Card.Meta>
           {comment && <Card.Description>{comment}</Card.Description>}
         </Card.Content>
+        {image &&
         <Card.Content extra>
-          {image &&
+          <center>
             <Image 
               rounded 
-              floated='left'
-              style={{ margin: 0, marginRight: 10, maxWidth: 100, maxHeight: 100 }}
-              src={this.state.imageURL} 
-              alt={label}
-            />}
-          <small>Added: {new Date(addedAt).toLocaleString()}</small>
-          <small>{updatedAt && `Updated: ${new Date(updatedAt).toLocaleString()}`}</small>
-        </Card.Content>
+              style={{ maxWidth: 100, maxHeight: 100 }}
+              src={this.state.imageURL}
+            />
+          </center>
+        </Card.Content>}
       </Card>
     )
   }
@@ -65,7 +122,7 @@ class PostListItem extends Component {
   render() {
     const post = this.props.item;
     const user = this.props.user;
-    const { userId, postId, image, label, comment, rating, addedAt, updatedAt } = post;
+    const { userId, productId, postId, image, label, comment, rating, addedAt, updatedAt } = post;
 
     const CardItem = this.renderItem();
 
@@ -82,7 +139,12 @@ class PostListItem extends Component {
               <Item>
                 <Item.Content>
                   
-                  <Header>{label}</Header>
+                  <Header>
+                    {label}
+                    <Header.Subheader>
+                      Art.nr. {productId}
+                    </Header.Subheader>
+                  </Header>
                   <Item.Meta>
                     <Rating 
                       icon='star' 
@@ -91,7 +153,7 @@ class PostListItem extends Component {
                       maxRating={5} 
                       disabled />{rating ? rating : 0}
                   </Item.Meta>
-                  <Item.Description>
+                  <Item.Description style={{paddingTop: 10}}>
                     {comment}
                   </Item.Description>
                   <Divider></Divider>
@@ -113,7 +175,7 @@ class PostListItem extends Component {
             />}
         </Modal.Content>
 
-        {user.id === userId ?
+        {user.username === userId ?
           <Modal.Actions>
             <Button as={Link} to={`/posts/${postId}`} primary>
               <Icon name='edit' /> Edit

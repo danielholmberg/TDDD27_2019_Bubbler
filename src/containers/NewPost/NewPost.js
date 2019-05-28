@@ -75,7 +75,7 @@ class NewPost extends Component {
         : null;
   
       const newPost = {
-        userId: this.props.user.id,
+        userId: this.props.user.username,
         productId: this.state.productId,
         image: image,
         label: this.state.label,

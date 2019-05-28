@@ -5,6 +5,7 @@
   "dependencies": {
     "amazon-cognito-identity-js": "^3.0.12",
     "aws-amplify": "^1.1.26",
+    "aws-sdk": "^2.463.0",
     "react": "^16.8.6",
     "react-bootstrap": "^0.32.4",
     "react-bootstrap-typeahead": "^4.0.0-alpha.10",
