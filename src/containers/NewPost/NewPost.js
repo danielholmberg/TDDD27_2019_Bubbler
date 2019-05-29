@@ -140,10 +140,10 @@ class NewPost extends Component {
    */
   render() {
     const { isLoading, rating } = this.state;
-    const { systembolagetData } = this.props;
+    const { systembolagetData, mobile } = this.props;
 
     return (
-      <Form style={{marginBottom: 16}} loading={isLoading}>
+      <Form style={{marginBottom: 16, width: mobile ? '100%' : '75%'}} className='NewPostForm' size='small' loading={isLoading}>
         <label>Label</label>
         <Typeahead
           clearButton
@@ -179,6 +179,7 @@ const mapStateToProps = (state, ownProps) => {
     isAuthenticated: state.auth.isAuthenticated,
     systembolagetData: state.base.systembolagetData,
     user: state.auth.user,
+    mobile: state.base.mobile,
   }
 }
 

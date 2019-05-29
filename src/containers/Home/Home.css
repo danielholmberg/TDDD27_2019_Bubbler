@@ -24,6 +24,13 @@
   color: #666;
 }
 
+.Home .posts {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
 .Home .btn-add {
   background: #c9f8bd;
 }

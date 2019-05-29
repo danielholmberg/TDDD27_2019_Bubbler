@@ -41,7 +41,7 @@ class Profile extends Component {
     return this.state.name.trim().length > 0;
   }
 
-  renderHeaderSection() {
+  renderProfile() {
     const { posts, user } = this.props;
     const EMPTY_LIST_TEXT = 'No ratings added yet!';
     const profilePic = null // TODO - Add posibility to change profile avatar
@@ -49,12 +49,8 @@ class Profile extends Component {
     posts.map((post) => totalCost = totalCost + Number(post.price) );
 
     return (
-      <Container>
-        <Segment padded style={{ 
-          marginLeft: this.props.mobile ? 0 : '10%', 
-          marginRight: this.props.mobile ? 0 : '10%', 
-          overflowWrap: 'break-word'
-          }}>
+      <div className="Content">
+        <Segment padded className="ProfileSegment">
 
           <Header as='h2' icon dividing textAlign='center'>
             {profilePic ?  
@@ -78,9 +74,9 @@ class Profile extends Component {
 
         </Segment>
 
-        <Header as='h2'><center>Your reviews</center></Header>
+        <Header as='h2' textAlign='center'>Your reviews</Header>
         {posts.length !== 0 ? this.renderPostList(posts) : <center style={{color:'grey'}}>{EMPTY_LIST_TEXT}</center>}
-      </Container>
+      </div>
     );
   }
 
@@ -88,7 +84,7 @@ class Profile extends Component {
     return (
       <div className="Profile">
         {this.props.isAuthenticated
-          ? this.renderHeaderSection()
+          ? this.renderProfile()
           : this.props.history.push("/login")}
       </div>
     );

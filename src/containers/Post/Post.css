@@ -1,8 +1,4 @@
-.Post form {
-  padding-bottom: 15px;
-}
-
-.Post form textarea {
-  height: 300px;
-  font-size: 24px;
+.PostForm {
+  margin-left: auto;
+  margin-right: auto;
 }

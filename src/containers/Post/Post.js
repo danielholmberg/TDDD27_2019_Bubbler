@@ -202,12 +202,12 @@ class Post extends Component {
    */
   render() {
     const { isLoading, comment, rating } = this.state;
-    const { post, systembolagetData } = this.props;
+    const { post, systembolagetData, mobile } = this.props;
     
     return (
       <div>
       {post &&
-      <Form loading={isLoading}>
+      <Form style={{marginBottom: 16, width: mobile ? '100%' : '75%'}} className='PostForm' size='small' loading={isLoading}>
         <label>Label</label>
         <Typeahead
           clearButton
@@ -264,6 +264,7 @@ const mapStateToProps = (state, ownProps) => {
     isAuthenticated: state.auth.isAuthenticated,
     systembolagetData: state.base.systembolagetData,
     history: ownProps.history,
+    mobile: state.base.mobile,
   }
 }
 

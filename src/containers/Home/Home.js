@@ -40,20 +40,16 @@ class Home extends Component {
 
     return (
       <div className="posts">
-        <Header as='h1'><center>All Bubbles</center></Header>
-        <center>
-          <Link to="/posts/new" >
-            <Button primary
-              style={{ 
-                marginBottom: 16, 
-                width: mobile ? '100%' : '50%', 
-                backgroundColor: 'green' 
-              }}
-            >
-              <Icon name='add'/> Add more bubbles
-            </Button>
-          </Link>
-        </center>
+        <Header as='h1' textAlign='center'>All Bubbles</Header>
+        <Button as={Link} to="/posts/new" primary fluid
+          style={{ 
+            marginBottom: 16,
+            width: mobile ? '100%' : '50%',
+            backgroundColor: 'green' 
+          }}
+        >
+          <Icon name='add'/> Add more bubbles
+        </Button>
         {posts.length !== 0 ? this.renderPostList(posts) : <center><Message compact info>{EMPTY_LIST_TEXT}</Message></center>}
       </div>
     );
@@ -74,6 +70,7 @@ const mapStateToProps = (state) => {
     posts: state.posts.posts,
     isAuthenticated: state.auth.isAuthenticated,
     hasFeedHistory: state.posts.hasFeedHistory,
+    mobile: state.base.mobile,
   }
 }
 

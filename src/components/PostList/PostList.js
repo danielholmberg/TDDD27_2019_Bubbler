@@ -15,7 +15,7 @@ export default class PostList extends Component {
   render() {
     const posts = this.props.items;
     return (
-      <Card.Group centered>
+      <Card.Group centered fluid>
         {this.renderPostList(posts)}
       </Card.Group>
     )
