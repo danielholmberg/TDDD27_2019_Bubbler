@@ -88,7 +88,7 @@ class PostListItem extends Component {
   renderItem() {
     const { postUser } = this.state;
     const post = this.props.item;
-    const { postId, productId, image, label, comment, rating, addedAt } = post;
+    const { postId, productId, image, label, reviewComment, rating, addedAt } = post;
 
     return (
       <Card style={{ overflowWrap: 'break-word' }} raised key={postId} >
@@ -103,7 +103,7 @@ class PostListItem extends Component {
             <Rating icon='star' style={{ paddingRight: 10, paddingTop: 10 }} rating={rating} maxRating={5} disabled />
             {rating ? rating : 0}
           </Card.Meta>
-          {comment && <Card.Description>{comment}</Card.Description>}
+          {reviewComment && <Card.Description>{reviewComment}</Card.Description>}
         </Card.Content>
         {image &&
         <Card.Content extra>
@@ -122,7 +122,7 @@ class PostListItem extends Component {
   render() {
     const post = this.props.item;
     const user = this.props.user;
-    const { userId, productId, postId, image, label, comment, rating, addedAt, updatedAt } = post;
+    const { userId, productId, postId, image, label, reviewComment, rating, addedAt, updatedAt } = post;
 
     const CardItem = this.renderItem();
 
@@ -154,7 +154,7 @@ class PostListItem extends Component {
                       disabled />{rating ? rating : 0}
                   </Item.Meta>
                   <Item.Description style={{paddingTop: 10}}>
-                    {comment}
+                    {reviewComment}
                   </Item.Description>
                   <Divider></Divider>
                   <Item.Extra>

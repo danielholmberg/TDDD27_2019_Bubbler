@@ -22,7 +22,7 @@ class NewPost extends Component {
       country: null,
       volume: 0,
       label: "",
-      comment: null,
+      reviewComment: null,
       rating: 0,
     };
   }
@@ -54,7 +54,7 @@ class NewPost extends Component {
     }
   }
 
-  handleCommentChange = (e, { value }) => this.setState({ comment: value })
+  handleCommentChange = (e, { value }) => this.setState({ reviewComment: value })
 
   handleFileChange = event => {
     this.file = event.target.files[0];
@@ -89,7 +89,7 @@ class NewPost extends Component {
         volume: this.state.volume,
         image: image,
         label: this.state.label,
-        comment: this.state.comment,
+        reviewComment: this.state.reviewComment,
         rating: this.state.rating,
       };
 

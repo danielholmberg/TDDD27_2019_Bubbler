@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Segment, Header, Label, Icon, Image, Grid } from "semantic-ui-react";
+import { Segment, Header, Label, Icon, Image, Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import PostList from "../../components/PostList/PostList.js";

@@ -15,8 +15,9 @@ import {
 } from "./store/actions/authActions.js";
 import { 
   getFeedHistory, 
-  addNewPost,
-  removePost
+  addNewPostEvent,
+  removePostEvent,
+  updatePostEvent
 } from "./store/actions/postActions.js";
 import { 
   windowResize, 
@@ -62,10 +63,13 @@ class App extends Component {
     const data = JSON.parse(e.data)
     switch(data.action) {
       case 'add':
-        this.props.addNewPost(data.post);
+        this.props.addNewPostEvent(data.post);
         break;
       case 'delete':
-        this.props.removePost(data.id);
+        this.props.removePostEvent(data.id);
+        break;
+      case 'update':
+        this.props.updatePostEvent(data.post);
         break;
       default:
         console.warn('Unhandled WSS onMessage event...', data);
@@ -191,8 +195,9 @@ const mapDispatchToProps = (dispatch) => {
     getSystembolagetData: () => dispatch(getSystembolagetData()),
     getFeedHistory: () => dispatch(getFeedHistory()),
     setWSSClient: (wss) => dispatch(setWSSClient(wss)),
-    addNewPost: (post) => dispatch(addNewPost(post)),
-    removePost: (id) => dispatch(removePost(id)),
+    addNewPostEvent: (post) => dispatch(addNewPostEvent(post)),
+    removePostEvent: (id) => dispatch(removePostEvent(id)),
+    updatePostEvent: (post) => dispatch(updatePostEvent(post)),
   }
 }
 

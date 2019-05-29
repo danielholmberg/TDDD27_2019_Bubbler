@@ -31,7 +31,7 @@ class Post extends Component {
       isDeleting: null,
       productId: null,
       label: "",
-      comment: null,
+      reviewComment: null,
       rating: 0,
     };
     
@@ -47,7 +47,7 @@ class Post extends Component {
     try {
       const post = this.props.post;
       console.log('POST', post)
-      const { productId, image, label, comment, rating } = post;
+      const { productId, image, label, reviewComment, rating } = post;
 
       if (image) {
         this.imageURL = await Storage.get(image);
@@ -56,7 +56,7 @@ class Post extends Component {
       this.setState({
         productId,
         label,
-        comment,
+        reviewComment,
         rating
       })
 
@@ -88,7 +88,7 @@ class Post extends Component {
     }
   }
 
-  handleCommentChange = (e, { value }) => this.setState({ comment: value })
+  handleCommentChange = (e, { value }) => this.setState({ reviewComment: value })
   
   handleFileChange = event => {
     this.file = event.target.files[0];
@@ -122,7 +122,7 @@ class Post extends Component {
         productId: this.state.productId,
         image: image || this.props.post.image,
         label: this.state.label,
-        comment: this.state.comment,
+        reviewComment: this.state.reviewComment,
         rating: this.state.rating
       };
       await this.props.updatePost(updatedPost);
@@ -201,7 +201,7 @@ class Post extends Component {
    * the browser’s confirm dialog.
    */
   render() {
-    const { isLoading, comment, rating } = this.state;
+    const { isLoading, reviewComment, rating } = this.state;
     const { post, systembolagetData, mobile } = this.props;
     
     return (
@@ -220,7 +220,7 @@ class Post extends Component {
           placeholder="Choose your bubbles..."
         />
         <label>Comment</label>
-        <Form.TextArea placeholder='Write a comment...' value={comment || ""} onChange={this.handleCommentChange}/>
+        <Form.TextArea placeholder='Write a comment...' value={reviewComment || ""} onChange={this.handleCommentChange}/>
         <label>Image</label>
         {post.image 
           ? (<a

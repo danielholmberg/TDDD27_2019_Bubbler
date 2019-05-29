@@ -34,10 +34,10 @@ const postReducer = (state = initState, action) => {
 
     // UPDATE
     case PostActionTypes.UPDATE_POST:
-      console.log(PostActionTypes.UPDATE_POST, action.post.postId);
+      console.log(PostActionTypes.UPDATE_POST, action.post);
       return {
         ...state,
-        posts: [...state.posts, action.post]
+        posts: [...state.posts.filter((post) => post.postId !== action.post.postId), action.post]
       }
 
     case PostActionTypes.UPDATE_POST_ERROR:
@@ -57,30 +57,38 @@ const postReducer = (state = initState, action) => {
       console.log('Get feed history error', action.error);
       return state;
 
-    // ADD NEW POST
-    case PostActionTypes.ADD_NEW_POST:
-      console.log(PostActionTypes.ADD_NEW_POST);
+    // ADD NEW POST EVENT
+    case PostActionTypes.ADD_NEW_POST_EVENT:
+      console.log(PostActionTypes.ADD_NEW_POST_EVENT);
       return {
         ...state,
         posts: [...state.posts, action.post]
       }
 
-    case PostActionTypes.ADD_NEW_POST_ERROR:
+    case PostActionTypes.ADD_NEW_POST_EVENT_ERROR:
       console.log('Add new post error', action.error);
       return state;
 
-    // ADD NEW POST
-    case PostActionTypes.REMOVE_POST:
-      console.log(PostActionTypes.REMOVE_POST, action.id);
+    // REMOVE POST EVENT
+    case PostActionTypes.REMOVE_POST_EVENT:
+      console.log(PostActionTypes.REMOVE_POST_EVENT, action.id);
       return {
         ...state,
         posts: state.posts.filter((post) => post.postId !== action.id)
       }
 
-    case PostActionTypes.REMOVE_POST_ERROR:
+    case PostActionTypes.REMOVE_POST_EVENT_ERROR:
       console.log('Remove post error', action.error);
       return state;
   
+    // UPDATE POST EVENT
+    case PostActionTypes.UPDATE_POST_EVENT:
+      console.log(PostActionTypes.UPDATE_POST_EVENT); 
+      return {
+        ...state,
+        posts: [...state.posts.filter((post) => post.postId !== action.post.postId), action.post]
+      }
+
     // DEFAULT
     default:
       return state;

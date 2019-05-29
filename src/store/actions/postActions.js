@@ -9,10 +9,12 @@ export const PostActionTypes = {
   UPDATE_POST_ERROR: 'UPDATE_POST_ERROR',
   GET_FEED_HISTORY: 'GET_FEED_HISTORY',
   GET_FEED_HISTORY_ERROR: 'GET_FEED_HISTORY_ERROR',
-  ADD_NEW_POST: 'ADD_NEW_POST',
-  ADD_NEW_POST_ERROR: 'ADD_NEW_POST_ERROR',
-  REMOVE_POST: 'REMOVE_POST',
-  REMOVE_POST_ERROR: 'REMOVE_POST_ERROR',
+  ADD_NEW_POST_EVENT: 'ADD_NEW_POST_EVENT',
+  ADD_NEW_POST_EVENT_ERROR: 'ADD_NEW_POST_EVENT_ERROR',
+  REMOVE_POST_EVENT: 'REMOVE_POST_EVENT',
+  REMOVE_POST_EVENT_ERROR: 'REMOVE_POST_EVENT_ERROR',
+  UPDATE_POST_EVENT: 'UPDATE_POST_EVENT',
+  UPDATE_POST_EVENT_ERROR: 'UPDATE_POST_EVENT_ERROR',
 }
 
 export const createPost = (post) => {
@@ -63,8 +65,9 @@ export const deletePost = (post) => {
 export const updatePost = (post) => {
   return async (dispatch, getState) => {
     try {
-      await API.put("REST", `/posts/${post.postId}`, {
-        body: post
+      await getState().base.wss.json({
+        action: 'updatePost',
+        data: post
       });
 
       dispatch({
@@ -98,34 +101,51 @@ export const getFeedHistory = () => {
   }
 }
 
-export const addNewPost = (post) => {
+export const addNewPostEvent = (post) => {
   return async (dispatch, getState) => {
     try {
-      console.log('addNewPost:', post);
+      console.log('addNewPostEvent:', post);
       dispatch({
-        type: PostActionTypes.ADD_NEW_POST,
+        type: PostActionTypes.ADD_NEW_POST_EVENT,
         post: post
       });
     } catch (error) {
       dispatch({
-        type: PostActionTypes.ADD_NEW_POST_ERROR,
+        type: PostActionTypes.ADD_NEW_POST_EVENT_ERROR,
         error: error
       });
     }
   }
 }
 
-export const removePost = (id) => {
+export const removePostEvent = (id) => {
   return async (dispatch, getState) => {
     try {
-      console.log('removePost:', id);
+      console.log('removePostEvent:', id);
       dispatch({
-        type: PostActionTypes.REMOVE_POST,
+        type: PostActionTypes.REMOVE_POST_EVENT,
         id: id
       });
     } catch (error) {
       dispatch({
-        type: PostActionTypes.REMOVE_POST_ERROR,
+        type: PostActionTypes.REMOVE_POST_EVENT_ERROR,
+        error: error
+      });
+    }
+  }
+}
+
+export const updatePostEvent = (post) => {
+  return async (dispatch, getState) => {
+    try {
+      console.log('updatePostEvent:', post);
+      dispatch({
+        type: PostActionTypes.UPDATE_POST_EVENT,
+        post: post
+      });
+    } catch (error) {
+      dispatch({
+        type: PostActionTypes.UPDATE_POST_EVENT_ERROR,
         error: error
       });
     }

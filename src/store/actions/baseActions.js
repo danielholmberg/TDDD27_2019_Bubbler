@@ -1,5 +1,5 @@
 import { API } from "aws-amplify";
-import * as  AmazonCognitoIdentity from "amazon-cognito-identity-js";
+//import * as  AmazonCognitoIdentity from "amazon-cognito-identity-js";
 
 export const BaseActionTypes = {
   WINDOW_RESIZE: 'WINDOW_RESIZE',
@@ -46,6 +46,8 @@ export const setWSSClient = (wss) => {
   }
 }
 
+// Not in use at the moment, useful to change user attributes later on.
+/*
 export const updateUserAttributes = (attributes) => {
   return async (dispatch, getState) => {
     try {
@@ -76,4 +78,4 @@ export const updateUserAttributes = (attributes) => {
       });
     }
   }
-}
+}*/
