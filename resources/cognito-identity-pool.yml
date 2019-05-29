@@ -54,6 +54,13 @@ Resources:
                   - 'cognito-sync:*'
                   - 'cognito-identity:*'
                 Resource: '*'
+
+              # Allow users to ListUsers
+              - Effect: Allow
+                Action: 
+                  - "cognito-idp:ListUsers"
+                Resource:
+                  - Fn::GetAtt: [ CognitoUserPool, Arn ]
               
               # Allow users to invoke our API
               - Effect: 'Allow'
