@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Segment, Header, Label, Icon, Image } from "semantic-ui-react";
+import { Container, Segment, Header, Label, Icon, Image, Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import PostList from "../../components/PostList/PostList.js";
@@ -48,7 +48,12 @@ class Profile extends Component {
 
     return (
       <Container>
-        <Segment padded style={{ marginLeft: '10%', marginRight: '10%', overflowWrap: 'break-word'}}>
+        <Segment padded style={{ 
+          marginLeft: this.props.mobile ? 0 : '10%', 
+          marginRight: this.props.mobile ? 0 : '10%', 
+          overflowWrap: 'break-word'
+          }}>
+
           <Header as='h2' icon dividing textAlign='center'>
             {profilePic ?  
               <Image circular src={profilePic} /> :
@@ -58,11 +63,14 @@ class Profile extends Component {
               {user && (user.attributes.name || user.attributes.email)}
             </Header.Content>
           </Header>
-          <Container>
-            <Label style={{float: 'right'}} horizontal basic>
-              <Icon name='star' color='yellow' style={{height: '10px'}}/> <b>{posts.length}</b>
-            </Label>
-          </Container>
+          <Grid padded >
+            <Grid.Column floated='left' width={2}>
+              <Label horizontal basic>
+                <Icon name='star' color='yellow' style={{height: '10px'}}/> <b>{posts.length}</b>
+              </Label>
+            </Grid.Column>        
+          </Grid>
+
         </Segment>
 
         <Header as='h2'><center>Your reviews</center></Header>
@@ -93,6 +101,7 @@ const mapStateToProps = (state, ownProps) => {
     user: user,
     posts: userPosts,
     history: ownProps.history,
+    mobile: state.base.mobile,
   }
 }
 
