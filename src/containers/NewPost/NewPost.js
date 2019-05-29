@@ -18,6 +18,9 @@ class NewPost extends Component {
     this.state = {
       isLoading: false,
       productId: null,
+      price: 0,
+      country: null,
+      volume: 0,
       label: "",
       comment: null,
       rating: 0,
@@ -35,9 +38,13 @@ class NewPost extends Component {
   }
 
   handleChange = (selected) => {
+    console.log('selected:',selected[0]);
     if(selected.length) {
       this.setState({
         productId: selected[0].itemId, // Artikel-id
+        price: selected[0].price,
+        country: selected[0].countryOfOrigin === '' ? "Unkown" : selected[0].countryOfOrigin,
+        volume: selected[0].volume,
         label: `${selected[0].name}${selected[0].name2 === '' ? '' : ' (' + selected[0].name2 + ')'}`
       });
     } else {
@@ -77,6 +84,9 @@ class NewPost extends Component {
       const newPost = {
         userId: this.props.user.username,
         productId: this.state.productId,
+        price: this.state.price,
+        country: this.state.country,
+        volume: this.state.volume,
         image: image,
         label: this.state.label,
         comment: this.state.comment,

@@ -45,6 +45,8 @@ class Profile extends Component {
     const { posts, user } = this.props;
     const EMPTY_LIST_TEXT = 'No ratings added yet!';
     const profilePic = null // TODO - Add posibility to change profile avatar
+    let totalCost = 0;
+    posts.map((post) => totalCost = totalCost + Number(post.price) );
 
     return (
       <Container>
@@ -64,9 +66,12 @@ class Profile extends Component {
             </Header.Content>
           </Header>
           <Grid padded >
-            <Grid.Column floated='left' width={2}>
+            <Grid.Column textAlign='center'>
               <Label horizontal basic>
                 <Icon name='star' color='yellow' style={{height: '10px'}}/> <b>{posts.length}</b>
+              </Label>
+              <Label horizontal basic>
+                <Icon name='dollar' color='green' style={{height: '10px'}}/> <b>{totalCost}</b>
               </Label>
             </Grid.Column>        
           </Grid>
