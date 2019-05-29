@@ -17,7 +17,8 @@ class Login extends Component {
     this.state = {
       isLoading: false,
       email: "",
-      password: ""
+      password: "",
+      errorMessage: "",
     };
     
   }
@@ -41,12 +42,12 @@ class Login extends Component {
   handleSubmit = async event => {
     event.preventDefault();
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, errorMessage: '' });
   
     try {
       await this.props.signInUser(this.state.email, this.state.password);
     } catch (e) {
-      alert(e.message);
+      this.setState({ errorMessage: e.message })
     }
 
     this.setState({ isLoading: false });
@@ -60,6 +61,10 @@ class Login extends Component {
             <Header as='h2' textAlign='center'>
               Log in to your account
             </Header>
+            {this.state.errorMessage &&
+            <Message warning attached>
+              {this.state.errorMessage}
+            </Message>}
             <Form size='large' loading={this.state.isLoading}>
               <Segment stacked>
                 <Form.Input 

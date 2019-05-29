@@ -34,6 +34,7 @@ export const signInUser = (email, password) => {
         isAuthenticated: false,
         error: error
       });
+      throw error;
     }
   }
 }

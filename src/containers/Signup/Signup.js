@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Form, Segment, Header, Button, Message, List } from "semantic-ui-react";
+import { Grid, Form, Segment, Header, Button, Message } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import "./Signup.css";
@@ -26,7 +26,7 @@ class Signup extends Component {
       confirmSignUp: false,
       email: "",
       password: "",
-      pwError: true,
+      pwError: false,
       confirmPassword: "",
       pwConfirmError: false,
       confirmationCode: "",
@@ -57,6 +57,7 @@ class Signup extends Component {
     console.log('test',!pwFormat.exec(event.target.value))
     if(!pwFormat.exec(event.target.value)) {
       this.setState({
+        password: event.target.value,
         pwError: true
       })
     } else {
@@ -163,11 +164,11 @@ class Signup extends Component {
 
   renderForm() {
     const pwCriteria = [
-      'At least 8 characters',
-      'At least 1 number',
-      'At least 1 special character',
-      'At least 1 uppercase',
-      'At least 1 lowercase'
+      '8 characters',
+      '1 number',
+      '1 special character (@$!%*?&)',
+      '1 uppercase',
+      '1 lowercase'
     ]
     
     return (
@@ -195,7 +196,7 @@ class Signup extends Component {
                 error={this.state.pwError}
                 onChange={this.handlePasswordChange}
               />
-              {this.state.pwError && <Message negative list={pwCriteria}/>}
+              {this.state.pwError && <Message negative style={{textAlign: 'left'}} header='Password must contain at least:' list={pwCriteria}/>}
               <Form.Input
                 fluid
                 icon='lock'
