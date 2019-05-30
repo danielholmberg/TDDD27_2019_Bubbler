@@ -1,4 +1,3 @@
-import uuid from "uuid";  
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { success, failure } from "./libs/response-lib";
 import * as Promise from 'bluebird';
@@ -21,44 +20,58 @@ export async function main(event, context) {
   const body = JSON.parse(event.body);
   const data = body.data;
 
-  // Construct the new Item to store in DynamoDB table: ${self:custom.postsTableName}
   // Note: check Reserved words in DynamoDB (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ReservedWords.html)
   // before adding or changing attribute names.
   const params = {
     TableName: process.env.postsTableName,
-    Item: {
+    Key: {
       userId: data.userId,
-      postId: uuid.v1(),
-      productId: data.productId,
-      price: data.price,
-      country: data.country,
-      volume: data.volume,
-      label: data.label,
-      image: data.image,
-      reviewComment: data.reviewComment,
-      rating: data.rating,
-      addedAt: Date.now(),
-      updatedAt: null,
-    }
+      postId: data.postId
+    },
+    UpdateExpression: `SET 
+    productId = :productId, 
+    price = :price,
+    country = :country,
+    volume = :volume,
+    label = :label, 
+    image = :image, 
+    rating = :rating, 
+    reviewComment = :reviewComment, 
+    updatedAt = :updatedAt`,
+    ExpressionAttributeValues: {
+      ":productId": data.productId || null,
+      ":price": data.price || 0,
+      ":country": data.country || 'Unknown',
+      ":volume": data.volume || 0,
+      ":label": data.label || null,
+      ":image": data.image || null,
+      ":reviewComment": data.reviewComment || null,
+      ":rating": data.rating || 0,
+      ":updatedAt": Date.now(),
+    },
+    // 'ReturnValues' specifies if and how to return the item's attributes,
+    // where ALL_NEW returns all attributes of the item after the update; you
+    // can inspect 'result' below to see how it works with different settings
+    ReturnValues: "ALL_NEW"
   };
 
   // [START] Helper functions
-  const notifyOfNewPost = async (connectionId, newItem) => {
+  const notifyOfUpdatedPost = async (connectionId, updatedPost) => {
     return client
       .postToConnection({
         ConnectionId: connectionId,
         Data: JSON.stringify({
-          action: 'add',
-          post: newItem
+          action: 'update',
+          post: updatedPost
         })
       }).promise();
   }
 
-  const addNewPostToDynaomDB = async () => {
-    return dynamoDbLib.call("put", params);
+  const updatePostInDynamoDB = async () => {
+    return dynamoDbLib.call("update", params);
   }
 
-  const broadcastNewPostToAll = async () => {
+  const broadcastUpdatedPostToAll = async (updatedPost) => {
     const connectionsTable = await dynamoDbLib.call("scan", {
       TableName: process.env.connectionsTableName
     })
@@ -67,8 +80,8 @@ export async function main(event, context) {
 
     const postCalls = connectionsTable.Items.map( async ({ connectionId }) => {
       try { 
-        console.log('notifyOfNewPost:', connectionId, params.Item)
-        return await notifyOfNewPost(connectionId, params.Item)
+        console.log('notifyOfUpdatedPost:', connectionId, updatedPost)
+        return await notifyOfUpdatedPost(connectionId, updatedPost)
       } catch (e) {
         if (e.statusCode === 410) {
           return await deleteConnection(connectionId.S);
@@ -95,9 +108,25 @@ export async function main(event, context) {
   // [END] Helper functions
 
   try {
-    await addNewPostToDynaomDB();
-    await broadcastNewPostToAll();
-    return success(params.Item);
+    const response = await updatePostInDynamoDB();
+    console.log('response:', response);
+    const { userId, postId, productId, price, country, volume, label, image, comment, rating, addedAt, updatedAt } = response.Attributes;
+    const updatedPost = {
+      userId,
+      postId,
+      productId,
+      price,
+      country,
+      volume,
+      label,
+      image,
+      comment,
+      rating,
+      addedAt,
+      updatedAt
+    }
+    await broadcastUpdatedPostToAll(updatedPost);
+    return success({ status: true });
   } catch (e) {
     console.log(e);
     return failure({ status: false });

@@ -97,21 +97,16 @@ functions:
     events:
       - websocket: 
           route: deletePost
+  # Handle update of a post.
+  updatePost: 
+    handler: updatePost.main
+    events:
+      - websocket: 
+          route: updatePost
           
   # [END] Websocket API
   # [START] REST API
 
-  # Defines an HTTP API endpoint that calls the main function in update.js
-  # - path: url path is /posts/{id}
-  # - method: PUT request
-  update:
-    handler: update.main
-    events:
-      - http:
-          path: posts/{id}
-          method: put
-          cors: true
-          authorizer: aws_iam
   # Defines an HTTP API endpoint that calls the main function in getFeed.js
   # - path: url path is /feed-history
   # - method: GET request
