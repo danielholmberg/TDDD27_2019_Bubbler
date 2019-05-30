@@ -110,7 +110,7 @@ export async function main(event, context) {
   try {
     const response = await updatePostInDynamoDB();
     console.log('response:', response);
-    const { userId, postId, productId, price, country, volume, label, image, comment, rating, addedAt, updatedAt } = response.Attributes;
+    const { userId, postId, productId, price, country, volume, label, image, reviewComment, rating, addedAt, updatedAt } = response.Attributes;
     const updatedPost = {
       userId,
       postId,
@@ -120,7 +120,7 @@ export async function main(event, context) {
       volume,
       label,
       image,
-      comment,
+      reviewComment,
       rating,
       addedAt,
       updatedAt
