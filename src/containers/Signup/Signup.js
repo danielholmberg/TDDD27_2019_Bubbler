@@ -12,7 +12,6 @@ import {
 /**
  *  - Since we need to show the user a form to enter the confirmation code, we are conditionally 
  *    rendering two forms based on if we have a user object or not. 
- *  - We are using the LoaderButton component that we created earlier for our submit buttons.
  *  - Since we have two forms we have two validation methods called validateForm and validateConfirmationForm.
  *  - We are setting the autoFocus flags on the email and the confirmation code fields.
  */
@@ -54,14 +53,13 @@ class Signup extends Component {
 
   handlePasswordChange = event => {
     const pwFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    console.log('test',!pwFormat.exec(event.target.value))
+
     if(!pwFormat.exec(event.target.value)) {
       this.setState({
         password: event.target.value,
         pwError: true
       })
     } else {
-      console.log('error false:', event.target.value)
       this.setState({
         password: event.target.value,
         pwError: false

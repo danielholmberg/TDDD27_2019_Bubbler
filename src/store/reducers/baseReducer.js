@@ -9,7 +9,7 @@ const initState = {
 const baseReducer = (state = initState, action) => {
   switch(action.type) {
     case BaseActionTypes.WINDOW_RESIZE:
-      console.log(BaseActionTypes.WINDOW_RESIE);
+      console.log(BaseActionTypes.WINDOW_RESIZE);
       return {
         ...state,
         mobile: action.mobile

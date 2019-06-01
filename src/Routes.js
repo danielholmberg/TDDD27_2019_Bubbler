@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
+import { Loader } from "semantic-ui-react";
 import Loadable from "react-loadable";
 import { connect } from "react-redux";
 
@@ -10,17 +11,15 @@ import UnauthenticatedRoute from "./components/UnauthenticatedRoute.js";
 
 const MyLoadingComponent = ({ error, timedOut, retry, pastDelay }) => {
   if (error) {
-    console.log(error);
     return <div>Sorry, there was a problem loading the page.</div>;
   } else if (timedOut) {
-    console.log(timedOut);
     return (
       <div>
         Taking a long time... <button onClick={retry}>Retry</button>
       </div>
     );
   } else if (pastDelay) {
-    return <div>Bubbling...</div>;
+    return <Loader>.*. bubbling .*.</Loader>;
   } else {
     return null;
   }
@@ -31,43 +30,43 @@ const AsyncHome = Loadable({
   loader: () => import("./containers/Home/Home.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
-  delay: 300 // 0.3 seconds
+  delay: 1000 // 1 second
 });
 const AsyncLogin = Loadable({
   loader: () => import("./containers/Login/Login.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
-  delay: 300 // 0.3 seconds
+  delay: 1000 // 1 second
 });
 const AsyncSignup = Loadable({
   loader: () => import("./containers/Signup/Signup.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
-  delay: 300 // 0.3 seconds
+  delay: 1000 // 1 second
 });
 const AsyncNewPost = Loadable({
   loader: () => import("./containers/NewPost/NewPost.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
-  delay: 300 // 0.3 seconds
+  delay: 1000 // 1 second
 });
 const AsyncPost = Loadable({
   loader: () => import("./containers/Post/Post.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
-  delay: 300 // 0.3 seconds
+  delay: 1000 // 1 second
 });
 const AsyncNotFound404 = Loadable({
   loader: () => import("./containers/NotFound404/NotFound404.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
-  delay: 300 // 0.3 seconds
+  delay: 1000 // 1 second
 });
 const AsyncProfile = Loadable({
   loader: () => import("./containers/Profile/Profile.js"),
   loading: MyLoadingComponent,
   timeout: 10000, // 10 seconds
-  delay: 300 // 0.3 seconds
+  delay: 1000 // 1 second
 });
 /**
  * This component uses this Switch component from React-Router that

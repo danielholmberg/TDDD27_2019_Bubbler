@@ -38,7 +38,6 @@ class NewPost extends Component {
   }
 
   handleChange = (selected) => {
-    console.log('selected:',selected[0]);
     if(selected.length) {
       this.setState({
         productId: selected[0].itemId, // Artikel-id
@@ -147,6 +146,7 @@ class NewPost extends Component {
         <label>Label</label>
         <Typeahead
           clearButton
+          id='NewPostLabel'
           style={{marginBottom: 16}}
           labelKey={(item) => `${item.name}${item.name2 === '' ? '' : ' (' + item.name2 + ')'}`}
           options={systembolagetData}
@@ -173,8 +173,6 @@ class NewPost extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('NewPost state:', state);
-  console.log('NewPost ownProps:', ownProps);
   return {
     isAuthenticated: state.auth.isAuthenticated,
     systembolagetData: state.base.systembolagetData,

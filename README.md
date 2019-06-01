@@ -1,5 +1,22 @@
-# Bubbler Frontend - React.js
+# Bubbler - Frontend
+Frameworks and 3rd party Libraries used:
+- **React**
+- React DOM
+- React Loadable
+- React Redux
+- React Router Bootstrap
+- React Bootstrap Typeahead
+- Semantic UI React 
+- **Redux**
+- Redux Thunk
+- Sockette
+- **AWS SDK**
+- AWS Amplify
+- Amazon Cognito Identity
 
+Service used for *frontend* hosting:
+- AWS S3 bucket
+ 
 ## Development
 
 ### Initial process 

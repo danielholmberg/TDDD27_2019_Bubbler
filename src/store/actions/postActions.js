@@ -20,12 +20,11 @@ export const PostActionTypes = {
 export const createPost = (post) => {
   return async (dispatch, getState) => {
     try {
-      console.log('Creat post:', post);
       const newPost = await getState().base.wss.json({
         action: 'addNewPost',
         data: post
       });
-      console.log('newPost:', newPost);
+
       if(newPost) {
         dispatch({
           type: PostActionTypes.CREATE_POST,
@@ -87,7 +86,7 @@ export const getFeedHistory = () => {
   return async (dispatch, getState) => {
     try {
       const posts = await API.get("REST", "/feed-history");
-      console.log('getFeedHistory:', posts);
+
       dispatch({
         type: PostActionTypes.GET_FEED_HISTORY,
         posts: posts
@@ -104,7 +103,6 @@ export const getFeedHistory = () => {
 export const addNewPostEvent = (post) => {
   return async (dispatch, getState) => {
     try {
-      console.log('addNewPostEvent:', post);
       dispatch({
         type: PostActionTypes.ADD_NEW_POST_EVENT,
         post: post
@@ -121,7 +119,6 @@ export const addNewPostEvent = (post) => {
 export const removePostEvent = (id) => {
   return async (dispatch, getState) => {
     try {
-      console.log('removePostEvent:', id);
       dispatch({
         type: PostActionTypes.REMOVE_POST_EVENT,
         id: id
@@ -138,7 +135,6 @@ export const removePostEvent = (id) => {
 export const updatePostEvent = (post) => {
   return async (dispatch, getState) => {
     try {
-      console.log('updatePostEvent:', post);
       dispatch({
         type: PostActionTypes.UPDATE_POST_EVENT,
         post: post

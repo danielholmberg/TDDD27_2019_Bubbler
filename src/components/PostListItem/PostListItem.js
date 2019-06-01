@@ -32,14 +32,11 @@ class PostListItem extends Component {
     AWS.config.update({ region: config.prod.cognito.REGION });
     AWS.config.update({ credentials: await Auth.currentCredentials() })
 
-    console.log('AWS.config:', AWS.config);
-
     const params = {
       UserPoolId: config.prod.cognito.USER_POOL_ID,
       AttributesToGet: [ 'name' ],
       Filter: `sub = \"${userId}\"`
     }
-    console.log('params:', params)
 
     const cognitoProvider = await new AWS.CognitoIdentityServiceProvider()
 
@@ -49,14 +46,12 @@ class PostListItem extends Component {
           console.log('err:', err);
           reject(err);
         } else {
-          console.log('data:', data);
           resolve(data);
         }
       });
     });
 
     const user = data.Users[0];
-    console.log('user:', user)
     return user;
   }
   
@@ -78,13 +73,6 @@ class PostListItem extends Component {
     this.setState({ imageURL, postUser });
 }
 
-  componentWillUpdate(nextProps, nextState) {
-    console.log('willUpdate',nextProps)
-    if(nextProps.user.name !== this.props.user.name) {
-      this.props.user = nextState.auth.user;
-    }
-  }
-
   renderItem() {
     const { postUser } = this.state;
     const post = this.props.item;
@@ -94,7 +82,7 @@ class PostListItem extends Component {
       <Card style={{ overflowWrap: 'break-word' }} raised key={postId} >
         <Header style={{position: 'relative', margin: 0, padding: 10, backgroundColor: '#57B4D5', color: 'white'}} as='h4'>
           <Image bordered circular src='https://react.semantic-ui.com/images/avatar/large/patrick.png' /> 
-          {postUser !== null ? (this.state.postUser.Attributes ? this.state.postUser.Attributes[0].Value : this.state.postUser.attributes.name) : 'Anonymous'}
+          {postUser !== null ? (postUser.Attributes ? postUser.Attributes[0].Value : postUser.attributes.name) : 'Anonymous'}
         </Header>
         <Card.Content>
           <Card.Header>{label}</Card.Header>
@@ -157,7 +145,7 @@ class PostListItem extends Component {
                     {reviewComment}
                   </Item.Description>
                   <Divider></Divider>
-                  <Item.Extra>
+                  <Item.Extra className='ModalExtra'>
                     <small>Added: {new Date(addedAt).toLocaleString()}</small>
                     <small>{updatedAt && `Updated: ${new Date(updatedAt).toLocaleString()}`}</small>
                   </Item.Extra>

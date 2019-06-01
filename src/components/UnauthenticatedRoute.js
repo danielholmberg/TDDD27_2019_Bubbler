@@ -26,7 +26,6 @@ function querystring(name, url = window.location.href) {
  * we use the Redirect component to simply send the user to the homepage.
  */
 const UnauthenticatedRoute = ({ component: Component, props, ...rest }) => {
-  console.log('UnauthRoute:', props)
   const redirect = querystring("redirect");
   return (
     <Route

@@ -92,8 +92,6 @@ class Profile extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('Profile state:', state);
-  console.log('Profile ownProps:', ownProps);
   const user = state.auth.user;
   const userPosts = state.posts.posts.filter((post) => post.userId === user.username);
 

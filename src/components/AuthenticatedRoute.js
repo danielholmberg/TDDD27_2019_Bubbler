@@ -11,7 +11,6 @@ import { Route, Redirect } from "react-router-dom";
  * after the user logs in.
  */
 const AuthenticatedRoute = ({ component: Component, props, ...rest }) => {
-  console.log('AuthRoute:', props);
   return (
     <Route
       {...rest}

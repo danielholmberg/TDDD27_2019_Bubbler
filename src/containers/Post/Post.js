@@ -46,7 +46,6 @@ class Post extends Component {
 
     try {
       const post = this.props.post;
-      console.log('POST', post)
       const { productId, image, label, reviewComment, rating } = post;
 
       if (image) {
@@ -211,6 +210,7 @@ class Post extends Component {
         <label>Label</label>
         <Typeahead
           clearButton
+          id='EditPostLabel'
           style={{marginBottom: 16}}
           labelKey={(item) => `${item.name}${item.name2 === '' ? '' : ' (' + item.name2 + ')'}`}
           options={systembolagetData}
@@ -254,8 +254,6 @@ class Post extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('Post.js - state', state);
-  console.log('Post.js - ownProps', ownProps);
   const id = ownProps.match.params.id;
   const post = state.posts.posts.find((post) => post.postId === id);
 

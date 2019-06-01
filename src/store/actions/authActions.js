@@ -21,8 +21,6 @@ export const signInUser = (email, password) => {
       await Auth.signIn(email, password);
       const user = await Auth.currentUserInfo();
 
-      console.log('user', user);
-
       dispatch({
         type: AuthActionTypes.SIGN_IN_USER,
         isAuthenticated: true,

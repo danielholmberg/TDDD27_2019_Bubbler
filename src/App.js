@@ -37,6 +37,11 @@ class App extends Component {
 
   async componentDidUpdate() {
     if(this.props.isAuthenticated) {
+
+      if(!this.props.hasFeedHistory) {
+        await this.props.getFeedHistory();
+      }
+
       try {
         if(!this.props.wss) {
           const wss = new Sockette(config.prod.apiGateway.WSS, {
@@ -176,7 +181,6 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   console.log('App state', state);
-  console.log('App ownProps', ownProps);
   return {
     isAuthenticated: state.auth.isAuthenticated,
     mobile: state.base.mobile,

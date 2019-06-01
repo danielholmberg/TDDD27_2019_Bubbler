@@ -5,19 +5,12 @@ import { connect } from "react-redux";
 
 import "./Home.css";
 import PostList from "../../components/PostList/PostList.js";
-import {
-  getFeedHistory
-} from "../../store/actions/postActions.js";
 
 class Home extends Component {
 
   async componentDidMount() {
     if (!this.props.isAuthenticated) {
       return;
-    }
-
-    if(!this.props.hasFeedHistory) {
-      await this.props.getFeedHistory();
     }
   }
 
@@ -65,19 +58,11 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('Home state:', state);
   return {
     posts: state.posts.posts,
     isAuthenticated: state.auth.isAuthenticated,
-    hasFeedHistory: state.posts.hasFeedHistory,
     mobile: state.base.mobile,
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getFeedHistory: () => dispatch(getFeedHistory()),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps)(Home);
