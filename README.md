@@ -1,11 +1,15 @@
 # TDDD27 Project: Bubbler
+## Screencast
+The screencast made to demonstrate the main aspects of this project can be watched on YouTube through this [link](https://www.youtube.com/watch?v=QUo8KS4w9n0).
+
 ## Functional specification
 A social platform to share your opinion on sparkling wines. The concept is similar to other social platforms that target beverages, i.e. [Untappd](https://untappd.com/) and [Vivino](https://www.vivino.com/).
 
 ### Core functionality
+* Sign-up and Login.
 * User-profile page.
 * *Add*, *change*, *remove*, and *rate* sparkling wines, i.e. **check-in**.
-* Interact with other users by for example see others' activity.
+* Check-in feed to interact with other users by for example see others' activity.
 
 ### Possible additional functionality
 * Highscore lists showing:
@@ -15,20 +19,7 @@ A social platform to share your opinion on sparkling wines. The concept is simil
    - Choose *your current location*, *location of purchase*, *type of glas used when consumed* and *possible friends with whom you consume the beverage* for all your check-ins. 
 
 ## Technological specification
-### Front-end
-Framework: **React + Redux** (Javascript)
-
-
-### Back-end
-Framework: **Node.js** (Javascript)
-
-Server service: **AWS** (Serverless)
-   - Cognito User Pool (User-functionality)
-   - Cognito Identity Pool (User-persmissions)
-   - S3 Bucket (File-storage)
-   - IAM (Identity and Access Management)
-   - **DynamoDB** (NoSQL)
-
+All *backend* and *frontend* information is located in corresponding branch, i.e. frontend technological specification is described in README on branch "frontend".
 
 ## Development - Adding to the project
 1. `git clone <SSH or HTTPS>`
