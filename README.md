@@ -19,7 +19,7 @@ Services used to build the *backend*:
   - [CloudWatch](https://aws.amazon.com/cloudwatch/) (Log)
   - [**DynamoDB**](https://aws.amazon.com/dynamodb/) (NoSQL)
 
-AWS allows us to scale our backend system without any additional costs in server-hardware or down-time maintenance, and much more.
+AWS and the Serverless framework allows us to scale our backend system without any additional costs in server-hardware or down-time maintenance, and much more.
 
 ## Development
 
