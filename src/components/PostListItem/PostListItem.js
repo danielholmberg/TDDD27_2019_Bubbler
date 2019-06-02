@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Storage } from 'aws-amplify';
 import { Link, withRouter } from "react-router-dom";
-import { Card, Rating, Image, Modal, Icon, Header, Button, Segment, Item, Divider } from 'semantic-ui-react';
+import { Card, Rating, Image, Modal, Icon, Header, Button, Segment, Item, Divider, Label } from 'semantic-ui-react';
 import { connect } from "react-redux";
 import { Auth } from "aws-amplify";
 import AWS from "aws-sdk";
@@ -110,7 +110,7 @@ class PostListItem extends Component {
   render() {
     const post = this.props.item;
     const user = this.props.user;
-    const { userId, productId, postId, image, label, reviewComment, rating, addedAt, updatedAt } = post;
+    const { userId, productId, postId, price, image, label, reviewComment, rating, addedAt, updatedAt } = post;
 
     const CardItem = this.renderItem();
 
@@ -133,13 +133,16 @@ class PostListItem extends Component {
                       Art.nr. {productId}
                     </Header.Subheader>
                   </Header>
-                  <Item.Meta>
+                  <Item.Meta className='ModalMeta'>
                     <Rating 
                       icon='star' 
-                      style={{ paddingRight: 10, paddingTop: 0 }} 
+                      style={{ paddingRight: 10 }} 
                       rating={rating} 
                       maxRating={5} 
                       disabled />{rating ? rating : 0}
+                    <Label style={{ marginLeft: 10 }} horizontal basic>
+                      <Icon name='dollar' color='green' style={{height: '10px'}}/> <b>{price}</b>
+                    </Label>
                   </Item.Meta>
                   <Item.Description style={{paddingTop: 10}}>
                     {reviewComment}

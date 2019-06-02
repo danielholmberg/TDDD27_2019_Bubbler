@@ -1,3 +1,14 @@
+.ModalMeta {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.ModalMeta .Label {
+  float: right;
+}
+
 .ModalExtra {
   display: flex;
   flex-direction: row;
