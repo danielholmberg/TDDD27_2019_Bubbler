@@ -1,6 +1,7 @@
-# TDDD27 Project: Bubbler
-## Screencast
+# TDDD27 Project: [Bubbler](http://bubbler-frontend.s3-website.us-east-2.amazonaws.com/)
+## Screencast & Access
 The screencast made to demonstrate the main aspects of this project can be watched on YouTube through this [link](https://www.youtube.com/watch?v=QUo8KS4w9n0).
+The frontend webbapplication can be accessed through this temporary adress: [BUBBLER](http://bubbler-frontend.s3-website.us-east-2.amazonaws.com/).
 
 ## Functional specification
 A social platform to share your opinion on sparkling wines. The concept is similar to other social platforms that target beverages, i.e. [Untappd](https://untappd.com/) and [Vivino](https://www.vivino.com/).
