@@ -64,6 +64,7 @@ const authReducer = (state = initState, action) => {
       console.log('Sign up new user error', action.error);
       return state;
 
+    // CONFIRM SIGN UP
     case AuthActionTypes.CONFIRM_SIGN_UP:
       console.log(AuthActionTypes.CONFIRM_SIGN_UP);
       return state;
@@ -72,6 +73,7 @@ const authReducer = (state = initState, action) => {
       console.log('Confirm sign up error', action.error);
       return state;
 
+    // GET CURRENT USER
     case AuthActionTypes.GET_CURRENT_USER:
       console.log(AuthActionTypes.GET_CURRENT_USER);
       return {

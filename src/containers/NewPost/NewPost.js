@@ -59,12 +59,6 @@ class NewPost extends Component {
     this.file = event.target.files[0];
   }
 
-  /**
-   * We make our create call in createPost by making a POST request to /posts and passing 
-   * in our Post object. We upload the file using the s3Upload method.
-   * We then use the returned key and add that to the Post object when we create a new post.
-   * Finally, after the post is created we redirect to our homepage.
-   */
   handleSubmit = async event => {
     event.preventDefault();
   
@@ -131,12 +125,6 @@ class NewPost extends Component {
 
   handleRate = (e, { rating }) => this.setState({ rating })
 
-  /**
-   * The file input simply calls a different onChange handler (handleFileChange) that saves 
-   * the file object as a class property. We use a class property instead of saving it in 
-   * the state because the file object we save does not change or drive the rendering of our 
-   * component.
-   */
   render() {
     const { isLoading, rating } = this.state;
     const { systembolagetData, mobile } = this.props;

@@ -9,13 +9,6 @@ import {
   signInUser 
 } from "../../store/actions/authActions.js";
 
-/**
- *  - Since we need to show the user a form to enter the confirmation code, we are conditionally 
- *    rendering two forms based on if we have a user object or not. 
- *  - Since we have two forms we have two validation methods called validateForm and validateConfirmationForm.
- *  - We are setting the autoFocus flags on the email and the confirmation code fields.
- */
-
 class Signup extends Component {
   constructor(props) {
     super(props);
@@ -105,12 +98,6 @@ class Signup extends Component {
     this.setState({ isLoading: false });
   }
   
-  /**
-   * Use the confirmation code to confirm the user. With the user now confirmed, 
-   * Cognito now knows that we have a new user that can login to our app. Use the 
-   * email and password to authenticate exactly the same way we did in the login page.
-   * Finally, redirect to the homepage.
-   */
   handleConfirmationSubmit = async event => {
     event.preventDefault();
   
@@ -125,7 +112,6 @@ class Signup extends Component {
     }
   }
   
-
   renderConfirmationForm() {
     return (
       <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>

@@ -10,10 +10,6 @@ class Login extends Component {
   constructor(props) {
     super(props);
 
-    // It’s important that we give the user some feedback while we are logging them in. 
-    // So they get the sense that the app is still working, as opposed to being unresponsive.
-    // To do this we are adding an isLoading flag to the state, which we will use to update
-    // the loading state of the form component. 
     this.state = {
       isLoading: false,
       email: "",

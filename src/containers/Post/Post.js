@@ -10,15 +10,6 @@ import "./Post.css";
 import { s3Upload } from "../../libs/awsLib.js";
 import { updatePost, deletePost } from "../../store/actions/postActions.js";
 
-/**
- * Load the post on componentDidMount and save it to the state. We get the id of our post 
- * from the URL using the props automatically passed to us by React-Router in 
- * this.props.match.params.id. The keyword id is a part of the pattern matching in our 
- * route (/posts/:id). If there is an image, we use the key to get a secure link to 
- * the file we uploaded to S3. We then store this to the component’s state as imageURL.
- * The reason why we have the post object in the state along with the label and the 
- * imageURL is because we use this when the user edits the post.
- */
 class Post extends Component {
   constructor(props) {
     super(props);
@@ -93,12 +84,6 @@ class Post extends Component {
     this.file = event.target.files[0];
   }
   
-  /**
-   * If there is a file to upload we call s3Upload to upload it and save the key we get from S3.
-   * We save the post by making a PUT request with the post object to /posts/:id where we get the 
-   * id from this.props.match.params.id. We use the API.put() method from AWS Amplify.
-   * And on success we redirect the user to the homepage.
-   */
   handleSubmit = async event => {  
     event.preventDefault();
   
@@ -114,8 +99,6 @@ class Post extends Component {
       ? await this.fileUpload(this.file)
       : null;
   
-      // As of now, we are not deleting the old image when we upload a new one. Could be 
-      // changed pretty straightforward by looking at the AWS Amplify API Docs.
       const updatedPost = {
         ...this.props.post,
         productId: this.state.productId,
@@ -187,18 +170,6 @@ class Post extends Component {
 
   handleRate = (e, { rating }) => this.setState({ rating })
   
-  /**
-   * We render our form only when this.state.post is available.
-   * Inside the form we conditionally render the part where we display the image by 
-   * using this.state.post.image.
-   * We format the image URL using formatFilename by stripping the timestamp we had 
-   * added to the filename while uploading it.
-   * We also added a delete button to allow users to delete the post. And just like the 
-   * submit button it too needs a flag that signals that the call is in progress.
-   * We handle images with a file input exactly like we did in the NewPost component.
-   * Our delete button also confirms with the user if they want to delete the post using 
-   * the browser’s confirm dialog.
-   */
   render() {
     const { isLoading, reviewComment, rating } = this.state;
     const { post, systembolagetData, mobile } = this.props;

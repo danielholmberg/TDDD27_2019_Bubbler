@@ -22,8 +22,7 @@ import rootReducer from './store/reducers/rootReducer';
  *    In our case our entire backend is just one single API.
 
 The Amplify.configure() is just setting the various AWS resources that we want to interact with. 
-It isn’t doing anything else special here beside configuration. So while this might look intimidating, 
-just remember this is only setting things up.
+It isn’t doing anything else special here beside configuration.
  */
 Amplify.configure({
   Auth: {
@@ -60,7 +59,4 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();

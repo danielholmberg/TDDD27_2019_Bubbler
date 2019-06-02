@@ -1,21 +1,26 @@
 # Bubbler - Frontend
+Our frontend is mainly built with use of the React framework and the predictable state container for JavaScript applications, Redux. Communication with our backend services is established through libraries such as AWS SDK, AWS Amplify, Amazon Cognito Identity, and Sockette.
+
+The HOC component supplied through React Loadable lets us utilize code-splitting to load our components *asynchronous* for each designated Route.
+
 Frameworks and 3rd party Libraries used:
-- **React**
-- React DOM
-- React Loadable
-- React Redux
-- React Router Bootstrap
-- React Bootstrap Typeahead
-- Semantic UI React 
-- **Redux**
-- Redux Thunk
-- Sockette
-- **AWS SDK**
-- AWS Amplify
-- Amazon Cognito Identity
+- [**React**](https://reactjs.org/docs/getting-started.html)
+- [React DOM](https://reactjs.org/docs/react-dom.html)
+- [React Loadable](https://github.com/jamiebuilds/react-loadable)
+- [React Redux](https://react-redux.js.org/introduction/quick-start)
+- [React Router DOM](https://reacttraining.com/react-router/web/guides/quick-start)
+- [React Router Bootstrap](https://github.com/react-bootstrap/react-router-bootstrap)
+- [React Bootstrap Typeahead](https://github.com/ericgio/react-bootstrap-typeahead#readme)
+- [Semantic UI React](https://react.semantic-ui.com/) 
+- [**Redux**](https://redux.js.org/introduction/getting-started)
+- [Redux Thunk](https://github.com/reduxjs/redux-thunk)
+- [Sockette](https://github.com/lukeed/sockette)
+- [**AWS SDK**](https://docs.aws.amazon.com/sdk-for-javascript/index.html)
+- [AWS Amplify](https://aws-amplify.github.io/docs/js/start?ref=amplify-js-btn&platform=purejs)
+- [Amazon Cognito Identity](https://www.npmjs.com/package/amazon-cognito-identity-js)
 
 Service used for *frontend* hosting:
-- AWS S3 bucket
+- AWS S3 bucket ( [Static Website Hosting](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html) )
  
 ## Development
 

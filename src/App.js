@@ -122,11 +122,12 @@ class App extends Component {
   /**
    * Since loading the user session is an asynchronous process, we want to
    * ensure that our app does not change states when it first loads. To do
-   * this we’ll hold off rendering our app till isAuthenticating is false.
+   * this we’ll hold off rendering our app until isAuthenticating is false.
    * We’ll conditionally render our app based on the isAuthenticating flag.
    * 
-   * <NavLink> component from 'react-router-dom' helps avoid refreshing the webpage
-   * when routing the user to path='/'
+   * Link component from 'react-router-dom' provided shorthanded to our 
+   * <Menu.Item> components helps avoid refreshing the webpage when routing 
+   * the user to path='/'
    */
   render() {
     const { isAuthenticated, mobile } = this.props;

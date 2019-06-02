@@ -116,8 +116,10 @@ class PostListItem extends Component {
 
     return (
       <Modal 
-        closeIcon={{ style: { top: '1.0535rem', right: '1rem' }, color: 'black', name: 'close' }} // Workaround for button not showing on larger screen sizes.
-        size='small' trigger={CardItem} style={{position: 'relative'}} // postition: 'relative' to get the modal centered and wrapped.
+        // Workaround for button not showing on larger screen sizes due to Semantic UI React issue.
+        closeIcon={{ style: { top: '1.0535rem', right: '1rem' }, color: 'black', name: 'close' }} 
+        // postition: 'relative' to get the modal centered and wrapped, related to same issue as above.
+        size='small' trigger={CardItem} style={{position: 'relative'}} 
         >
 
         <Header content='Review details' />
