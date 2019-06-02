@@ -1,12 +1,24 @@
-# Bubbler Backend - Node.js
-Framework: **Serverless** (Node.js)
+# Bubbler - Backend
+Our backend consists of a dual API-system with both a (1) REST API, and a (2) Websocket API to enable *Up-to-date* and *Real-time* functionalities. The AWS service, *API Gateway*, is used to create, publish, maintain, and monitor these APIs, e.g. handle an increased flow of concurrent API calls, and much more. 
 
-Server service: **AWS** (Serverless)
-   - Cognito User Pool (User-functionality)
-   - Cognito Identity Pool (User-persmissions)
-   - S3 Bucket (File-storage)
-   - IAM (Identity and Access Management)
-   - **DynamoDB** (NoSQL)
+Frameworks and 3rd party Libraries used:
+- [**Serverless**](https://serverless.com/framework/docs/)
+- [**Node.js**](https://nodejs.org/en/)
+- [**AWS SDK**](https://docs.aws.amazon.com/sdk-for-javascript/index.html)
+- [Bluebird](http://bluebirdjs.com/docs/getting-started.html)
+- [UUID](https://github.com/kelektiv/node-uuid#readme)
+
+Services used to build the *backend*:
+- **Amazon Web Services** ( [AWS](https://aws.amazon.com/) )
+  - [**API Gateway**](https://aws.amazon.com/api-gateway/) (API hosting)
+  - [**AWS Lambda**](https://aws.amazon.com/lambda/) (Lambda functions for API-endpoints)
+  - [Cognito User Pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html) (User-functionality)
+  - [Cognito Identity Pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html) (User-persmissions)
+  - [IAM](https://aws.amazon.com/iam/) (Identity and Access Management)
+  - [**S3 Bucket**](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) (File-storage)
+  - [CloudWatch](https://aws.amazon.com/cloudwatch/) (Log)
+  - [**DynamoDB**](https://aws.amazon.com/dynamodb/) (NoSQL)
+AWS allows us to scale our backend system without any additional costs in server-hardware or down-time maintenance, and much more.
 
 ## Development
 

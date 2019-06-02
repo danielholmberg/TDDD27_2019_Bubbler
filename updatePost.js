@@ -5,10 +5,6 @@ import * as Promise from 'bluebird';
 import AWS from "aws-sdk";
 require('aws-sdk/clients/apigatewaymanagementapi');
 
-/**
- * We are also using the async/await pattern here to refactor our Lambda function. 
- * This allows us to return once we are done processing; instead of using a callback function.
- */
 export async function main(event, context) {
   const endpoint = event.requestContext.domainName + "/" + event.requestContext.stage;
   const client = new AWS.ApiGatewayManagementApi({
@@ -16,7 +12,6 @@ export async function main(event, context) {
     endpoint: endpoint
   });
 
-  // Parse the payload.
   const body = JSON.parse(event.body);
   const data = body.data;
 
