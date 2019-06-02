@@ -18,6 +18,7 @@ Services used to build the *backend*:
   - [**S3 Bucket**](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) (File-storage)
   - [CloudWatch](https://aws.amazon.com/cloudwatch/) (Log)
   - [**DynamoDB**](https://aws.amazon.com/dynamodb/) (NoSQL)
+
 AWS allows us to scale our backend system without any additional costs in server-hardware or down-time maintenance, and much more.
 
 ## Development
